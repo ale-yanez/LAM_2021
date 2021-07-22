@@ -16,7 +16,7 @@ TOP_OF_MAIN_SECTION
  gradient_structure::set_NUM_DEPENDENT_VARIABLES(5000); 
 
 DATA_SECTION
- init_int nyears 
+ init_int nyears
  init_int nedades
  init_int ntallas
 
