@@ -1,0 +1,751 @@
+---
+title: 'Análisis y Propuestas de Datos Langostino Amarillo'
+author: "Alejandro Yáñez"
+date: "Octubre de 2019"
+output:
+  #word_document:
+    #reference_docx: word-styles-reference-01.docx
+  pdf_document: default
+---
+
+
+```{r echo=FALSE,warning=FALSE, include=FALSE}
+rm(list=ls())
+library(stringr)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(R2admb)
+library(reshape2)
+library(ggpubr)
+library(plyr)
+source('~/Documents/Rwork/Functions/functions.R')
+source('~/Documents/Rwork/Functions/read.report.R')
+
+dir.1<-'~/Documents/Rwork/IFOP/LAm_2020/Taller_Datos'
+dir.2<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/Lamnor2003'
+dir.3<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/sur/Lamsur2003'
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+setwd(dir.2)
+dat.file_nor    = "lamnor2003.dat" #Cambiar despues por info actualizada y borrar esto
+dat1_nor        <- lisread(paste(dir.2,dat.file_nor, sep='/'));
+names(dat1_nor) <- str_trim(names(dat1_nor), side="right")
+dat_nor         <- dat1_nor
+```
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+setwd(dir.3)
+dat.file_sur    = "lamsur2003.dat" #Cambiar despues por info actualizada y borrar esto
+dat1_sur        <- lisread(paste(dir.3,dat.file_sur, sep='/'));
+names(dat1_sur) <- str_trim(names(dat1_sur), side="right")
+dat_sur         <- dat1_sur
+```
+
+
+# Introducción  
+  
+  
+Se preparó este reporte para dar cuenta de la información de entrada en el modelo de evaluación de stock de Langostino Amarillo, el cual es separado en dos zonas de evaluación, norte y sur, las cuales están divididas en los 30º 30' LS, de acuerdo a análisis realizados por Montenegro _et al._ (2008), quienes comparando estructuras de tallas, rendimientos y resultados provenientes de evaluaciones directas, postularon diferentes unidades de stock, llamadas actualmente Zona de Evaluación Norte (ZEN) y Zona de Evaluación Sur (ZES). Se presenta a continuación, cada pieza de información y se discuten las problemáticas actuales encontradas en la evaluación de stock para cada una de las dos zonas.
+
+
+  
+  
+## Desembarques históricos  
+  
+
+Los desembarques son presentados en primer lugar de manera general, luego por Unidad de Pesquería y luego por Zona de Evaluación, con la finalidad de analizar la información en estos rangos y compararla con la información actualmente utilizada en el modelo.  
+ 
+
+### Desembarques Totales  
+
+Los desembarques totales de langostino amarillo en el país son presentados en la **Figura 1**. Esta información fue extraída desde los anuarios de pesca entre los años 1953 al año 2000 y desde información solicitada directamente al Servicio Nacional de Pesca (Control Cuota), desde el años 2001 hasta el año más reciente.
+La principal diferencia entre ambas fuentes de información, radica en que para los últimos años es posible contar con información más específica del lugar desde donde proceden las capturas, lo cual es beneficioso para la evaluación de este recurso, pues es necesario estructurar la información por Zona de Evaluación y no por Unidad de Pesquería.  
+En términos de la información presentada en la **Figura 1**, es posible notar tres tipos de información. La primera parte corresponde a desembarques de langostinos en general, lo cual explica porque se observen volúmenes de desembarques tan altos. Estos langostinos podrían ser tanto la suma de langostino amarillo, colorado y otros más, sin identificar. Un segundo tipo de información, comienza desde el año 1979 hasta el año 2000, donde la información ya comienza a ser separada por especie y lo que se observa en esa figura es lo reportado únicamente para langostino amarillo. El tercer tipo de información, corresponde a los datos de desembarques obtenidos desde el Control Cuota, el cual entrega información más específica de la zona de extracción, entregando una mayor certidumbre respecto a la división por zona de evaluación utilizada actualmente, lo que permite asignar adecuadamente las capturas a una u otra zona. En este figura sin embargo, están presentadas ambas zonas en conjunto, mientras que los análisis más específicos se presentan en figuras siguientes.
+
+
+```{r echo=FALSE, eval=T}
+# Desembarque ####
+land<-read.csv("Correc_Desemb.csv", head=T, sep=',')
+ #head(land,10)
+ # tail(land)
+# summary(land)
+
+#land$yrs <- as.factor(land$yrs)
+land$yrs <- land$yrs
+land$Periodo <- as.factor(land$Periodo)
+# head(land,10)
+
+bp <- ggbarplot(land, x = "yrs", y = "Total",
+                fill = "Periodo",           # change fill color by cyl
+                color = "white",            # Set bar border colors to white
+                palette = 'jco',            # jco journal color palett. see ?ggpar
+                #palette = c("dodgerblue3","gold2","gold2"),            # jco journal color palett. see ?ggpar
+                #sort.val = "asc",           # Sort the value in ascending order
+                sort.by.groups = FALSE,      # Sort inside each group
+                x.text.angle = 90           # Rotate vertically x axis texts
+)
+
+bp <- bp + font("x.text", size = 7) + scale_x_continuous(breaks=round(seq(min(land$yrs), 2019, by = 2),1)) +
+  theme(legend.position = 'bottom') + xlab('Años') + ylab('Desembarque (t)')
+bp
+
+# op<-par(no.readonly=TRUE)
+# ps.options(horizontal=F,bg="white",onefile=FALSE,paper="special")
+# postscript("F1_ControlCuota.eps",height=8,width=12) 
+# bp
+# dev.off()
+
+```
+**Figura 1**. Serie de desembarque total (t) histórico de A) langostinos, B) y C) langostino amarillo entre los años 1953 y 2019.  
+  
+
+```{r echo=FALSE, eval=T}
+land2<-read.csv("Correc_Desemb2.csv", head=T, sep=',')
+#head(land2,10)
+# tail(land)
+# summary(land)
+
+#land$yrs <- as.factor(land$yrs)
+land2$yrs <- land2$yrs
+land2$Periodo <- as.factor(land2$Periodo)
+#head(land,10)
+
+
+bp2 <- ggbarplot(land2, x = "yrs", y = "Correcta",
+                fill = "Periodo",           # change fill color by cyl
+                color = "white",            # Set bar border colors to white
+                #palette = 'jco',            # jco journal color palett. see ?ggpar
+                palette = c("gold2","grey60"),            # jco journal color palett. see ?ggpar
+                #sort.val = "asc",           # Sort the value in ascending order
+                sort.by.groups = FALSE,      # Sort inside each group
+                x.text.angle = 0           # Rotate vertically x axis texts
+)
+
+bp2 <- bp2 + font("x.text", size = 7) + scale_x_continuous(breaks=round(seq(min(land2$yrs), 2019, by = 2),1)) +
+  theme(legend.position = 'bottom') + xlab('Años') + ylab('Desembarque (t)')
+bp2
+
+ # op<-par(no.readonly=TRUE)
+ # ps.options(horizontal=F,bg="white",onefile=FALSE,paper="special")
+ # postscript("F2_LAm79-19.eps",height=8,width=12) 
+ # bp2
+ # dev.off()
+```
+**Figura 2**. Serie de desembarque total (t) histórico de langostino amarillo B) Anuarios Sernapesca y C) Control Cuota Sernapesca entre los años 1979 y 2019.  
+  
+  
+  Dado que existe una alta incertidumbre en la información existente entre 1953 y 1978, la información utilizada en la evaluación de stock de este recurso comienza en el año 1985 para la zona de evaluación norte y en 1979 para la zona de evaluación sur. Se presenta en la **Figura 2**, los desembarques desde donde comienza la identificación del recurso langostino amarillo, sólo con el motivo de observar la escala de los desembarques desde el año 1979 hasta la fecha. Es importante considerar desde aquí en adelante, que la información presentada previa al año 2001, sólo puede ser separada por región y no por zonas más locales.
+
+
+### Desembarques Zona Evaluación Norte (ZEN)
+  
+  
+  Para continuar trabajando la evaluación de stock tal y como se ha desarrollado a través de los últimos 10 años, vale decir, separada en dos zonas de evaluación mediante la latitud 30º 30' S, se hace necesario determinar qué valores de desembarque deberían ingresar en el modelo entre los años 1979 y 2000, puesto que desde el año 2001 en adelante, es posible utilizar información fidedigna y confiable de la zona específica en que fue realizada la captura. La **Figura 3** muestra los valores de desembarque entre los años 1979 y 2000 utilizando la única información existente y que proviene desde el Servicio Nacional de Pesca. La información para estos años, sólo permite dividar los desembarques de langostino amarillo por Región, por lo que lo más aproximado para trabajar por zona de evaluación sería incorporar los desembarques de la Región de Atacama y Región de Coquimbo dentro de la ZEN. Esto provocaría una leve sobreestimación de estos valores en la ZEN, pues el límite de la Región de Coquimbo se encuentra en los 32º 10' LS, quitandole por lo tanto, un porcentaje de desembarques a la Zona de Evaluación Sur. El resto de la serie, como se ha mencionado anteriormente (2001-2019), presenta los valores correctos de desembarque para la ZEN. Si bien, en el año 2001 ocurre una disminución importante en las capturas por factores de manejo, el cambio de escala observado entre el año 2000 y 2001 es debido además a que la información corresponde a dos escalas espaciales diferentes, como se mencionó previamente.  
+  
+  
+```{r echo=FALSE, eval=T}
+
+bp3 <- ggbarplot(land2, x = "yrs", y = "UPN_ZEN",
+                fill = "Fuente",           # change fill color by cyl
+                color = "white",            # Set bar border colors to white
+                palette = 'simpsons',            # jco journal color palett. see ?ggpar
+                #palette = c("gold2","grey60"),            # jco journal color palett. see ?ggpar
+                #sort.val = "asc",           # Sort the value in ascending order
+                sort.by.groups = FALSE,      # Sort inside each group
+                x.text.angle = 0           # Rotate vertically x axis texts
+)
+
+bp3 <- bp3 + font("x.text", size = 7) + scale_x_continuous(breaks=round(seq(min(land2$yrs), 2019, by = 2),1)) +
+  theme(legend.position = 'bottom') + xlab('Años') + ylab('Desembarque (t)')
+bp3
+
+ # op<-par(no.readonly=TRUE)
+ # ps.options(horizontal=F,bg="white",onefile=FALSE,paper="special")
+ # postscript("F2_LAm79-19.eps",height=8,width=12) 
+ # bp2
+ # dev.off()
+```
+**Figura 3**. Serie de desembarque (t) de langostino amarillo para la Unidad de Pesquería Norte (1979-2000) y la Zona de Evaluación Norte (2001-2019).  
+  
+    
+  Actualmente, la información que ingresa al modelo de evaluación de stock para la Zona de Evaluación Norte, no concuerda con la información utilizada para construir la **Figura 3**, ni tampoco con alguna proporción conocida reportada en otros informes. La **Figura 4** muestra las diferencias existentes entre la información ingresada en el modelo de evaluación de stock para la ZEN y la información de la **Figura 3**. Además, hay información existente para los años 1979 hasta 1984 que no ha sido considerada y que le entregaría al modelo una condición de partida con niveles de explotación más bajos que el actualmente utilizado.
+  
+```{r echo=FALSE, warning=FALSE, eval=T}
+
+
+# creo data frame
+diff <- c(land2$UPN_ZEN-land2$MAN)
+diff[diff==0] <- NA
+
+df3 <- data.frame(fuente = c(rep("Fig3",length(land2$yrs)),rep("Mod",length(land2$yrs))),
+                  yrs = c(land2[,"yrs"], land2[,"yrs"]),
+                  land = c(diff, land2[,c("MAN")]))
+
+# creo labels
+df3$diff2 <- c(diff, c(rep(NA, 41)))
+df3$label2 <- c(land2$UPN_ZEN, c(rep(NA, 41)))
+
+# arrange datos
+df_sort <- arrange(df3, yrs, fuente)
+df_cumsum2 <- ddply(df_sort, "yrs",
+                   transform, label_ypos=cumsum(land))
+
+# plot
+p4 <- ggplot(data=df_cumsum2, aes(x=yrs, y=land, fill=fuente)) +
+  geom_bar(stat="identity")+
+  geom_text(aes(y=label2, label=diff2), vjust=1.1, 
+            color="blue", size=2)+
+  scale_fill_brewer(palette="Paired")
+
+p4 <- p4 + scale_x_continuous(breaks=round(seq(min(land2$yrs), 2019, by = 2),1)) + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.position = 'bottom') + xlab('Años') + ylab('Desembarque (t)')
+
+p4
+
+ # op<-par(no.readonly=TRUE)
+ # ps.options(horizontal=F,bg="white",onefile=FALSE,paper="special")
+ # postscript("F2_LAm79-19.eps",height=8,width=12) 
+ # bp2
+ # dev.off()
+```
+
+
+### Desembarques Zona Evaluación Sur (ZES)  
+
+  Al igual que en la ZEN, se presenta aquí la construcción de los desembarques entre 1979 y 2019 (**Figura 5**), utilizando para su confección datos desde SERNAPESCA. LA diferencia ocurre entre los años 1979 y 2000, pues al contrario que en la ZEN, en esta zona de evaluación se subestimarían los desembarques al usar para esos años la única información disponible y más cercana, que correspondería a desembarques desde la Región de Valparaíso hacia el sur, no pudiendo incorporar toda la actividad pesquera que ocurre al sur de la Región de Coquimbo y que corresponde a la ZES.
+
+```{r echo=FALSE, eval=T}
+
+bp5 <- ggbarplot(land2, x = "yrs", y = "UPS_ZES",
+                fill = "Tipo",           # change fill color by cyl
+                color = "white",            # Set bar border colors to white
+                palette = 'simpsons',            # jco journal color palett. see ?ggpar
+                #palette = c("gold2","grey60"),            # jco journal color palett. see ?ggpar
+                #sort.val = "asc",           # Sort the value in ascending order
+                sort.by.groups = FALSE,      # Sort inside each group
+                x.text.angle = 0           # Rotate vertically x axis texts
+)
+
+bp5 <- bp5 + font("x.text", size = 7) + scale_x_continuous(breaks=round(seq(min(land2$yrs), 2019, by = 2),1)) +
+  theme(legend.position = 'bottom') + xlab('Años') + ylab('Desembarque (t)')
+
+bp5
+
+ # op<-par(no.readonly=TRUE)
+ # ps.options(horizontal=F,bg="white",onefile=FALSE,paper="special")
+ # postscript("F2_LAm79-19.eps",height=8,width=12) 
+ # bp2
+ # dev.off()
+
+```
+
+  La información que ingresa al modelo de evaluación de stock para la Zona de Evaluación Sur, no concuerda con la información utilizada para construir la **Figura 5**, ni tampoco con alguna proporción conocida reportada en otros informes. La **Figura 6** muestra las diferencias existentes entre la información ingresada en el modelo de evaluación de stock para la ZES y la información de la **Figura 5**. En el caso de la zona sur, la hay información existente para los años 1979 hasta 1984 si ha sido considerada en la evaluación.  
+  
+
+
+```{r echo=FALSE, warning=FALSE, eval=T}
+
+
+# creo data frame
+diffS <- c(land2$MAS-land2$UPS_ZES)
+#diffS <- c(land2$MAS - diff1)
+
+diffS[diffS==0] <- NA
+
+l1 <- land2[,c("UPS_ZES")]
+l2 <- diffS
+
+l3 <- l1[1:22]
+l4 <- l1[23:41]
+
+l5 <- l2[1:22]
+l6 <- l2[23:41]
+
+df6 <- data.frame(fuente = c(rep("Fig",length(land2$yrs)),rep("Mod",length(land2$yrs))),
+                  yrs = c(land2[,"yrs"], land2[,"yrs"]),
+                  land = c(l5,l4, l3,l6))
+
+#l <- c(l5,l6)
+
+# creo labels
+df6$diff2S <- c(c(rep(NA, 41)), diffS)
+df6$label2S <- c(l5,l4,l3,l6)
+
+# arrange datos
+df_sortS <- arrange(df6, yrs, fuente)
+df_cumsum2S <- ddply(df_sortS, "yrs",
+                     transform, label_ypos=cumsum(land))
+
+#?geom_bar
+# plot
+p6 <- ggplot(data=df_cumsum2S, aes(x=yrs, y=land, fill=fuente)) +
+  geom_bar(stat="identity")+
+  geom_text(aes(y=label2S, label=diff2S), vjust=1.1, 
+            color="blue", size=2)+
+  scale_fill_brewer(palette="Paired")
+
+p6 <- p6 + scale_x_continuous(breaks=round(seq(min(land2$yrs), 2019, by = 2),1)) + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.position = 'bottom') + xlab('Años') + ylab('Desembarque (t)')
+
+p6
+
+ # op<-par(no.readonly=TRUE)
+ # ps.options(horizontal=F,bg="white",onefile=FALSE,paper="special")
+ # postscript("F2_LAm79-19.eps",height=8,width=12) 
+ # bp2
+ # dev.off()
+```
+
+
+
+```{r echo=FALSE, eval=F}
+# DATOS NORTE
+# ============================================================================== #
+yrs_n  <- dat_nor$Ind[,1]
+years_n  <- dat_nor$Ind[,1]
+nyrs_n <- length(yrs_n)
+age_n    <- dat_nor$edades
+nage_n   <- dat_nor$nages
+ntalla_n  <- dat_nor$ntallas
+tallas_n <- dat_nor$tallas
+
+
+#Indices
+mydat_nor <-  dat_nor$Ind[,c(1,2,3,4,5)] ; mydat_nor[mydat_nor==0] <- NA
+names <-  c('yrs', 'desem','cpue','Bcru','ph','Periodo')
+myd_nor   <-  data.frame(mydat_nor)
+myd_nor$periodo <- c(rep('B', 16), rep('C',19))
+colnames(myd_nor) <- names 
+
+
+#cvcpue        <- rep(0.15,nyrs)
+#obsC95i <- cpue*exp(-1.96*cvcpue); obsC95s <-cpue*exp(1.96*cvcpue)
+
+#Observado
+cpue_n <- myd_nor$cpue_n; cpue_n[cpue_n <= 0.01]   <-NA
+Bcru_n <- myd_nor$Bcru_n ; Bcru_n[Bcru_n <= 1]  <-NA
+
+# Confidence Intervals
+cvcpue_n        <- rep(0.15,nyrs_n)
+cvBcru_n        <- rep(0.30,nyrs_n)
+
+obsC95i_n <- cpue_n*exp(-1.96*cvcpue_n); obsC95s_n <-cpue_n*exp(1.96*cvcpue_n)
+obsS95i_n <- Bcru_n*exp(-1.96*cvBcru_n); obsS95s_n <-Bcru_n*exp(1.96*cvBcru_n)
+```
+
+
+```{r echo=FALSE, eval=F}
+# DATOS SUR
+# ============================================================================== #
+yrs  <- dat$Ind[,1]
+years  <- dat$Ind[,1]
+nyrs <- length(yrs)
+age    <- dat$edades
+nage   <- dat$nages
+ntalla  <- dat$ntallas
+tallas <- dat$tallas
+
+
+#Indices
+mydat <-  dat$Ind[,c(1,2,3,4,5)] ; mydat[mydat==0] <- NA
+names <-  c('yrs', 'desem','cpue','Bcru','ph','Periodo')
+myd   <-  data.frame(mydat)
+myd$periodo <- c(rep('A', 16), rep('B',18))
+colnames(myd) <- names 
+
+
+#cvcpue        <- rep(0.15,nyrs)
+#obsC95i <- cpue*exp(-1.96*cvcpue); obsC95s <-cpue*exp(1.96*cvcpue)
+
+#Observado
+cpue <- myd$cpue; cpue[cpue <= 0.01]   <-NA
+Bcru <- myd$Bcru ; Bcru[Bcru <= 1]  <-NA
+
+# Confidence Intervals
+cvcpue        <- rep(0.15,nyrs)
+cvBcru        <- rep(0.30,nyrs)
+
+obsC95i <- cpue*exp(-1.96*cvcpue); obsC95s <-cpue*exp(1.96*cvcpue)
+obsS95i <- Bcru*exp(-1.96*cvBcru); obsS95s <-Bcru*exp(1.96*cvBcru)
+```
+
+
+```{r echo=FALSE, warning = FALSE, eval= F}
+
+#Desembarques
+
+p1 <- ggplot(myd, aes(x=yrs, y=desem, fill=Periodo)) +
+        geom_bar(stat="identity", colour="NA") +
+        scale_fill_manual(values=c("dodgerblue3","gold2")) +
+        xlab('Años') + ylab('Desembarque (ton)') + 
+        theme(legend.title=element_blank()) +
+        scale_x_continuous(breaks=round(seq(min(myd$yrs), max(myd$yrs), by = 3),1)) + 
+        scale_y_continuous(breaks=round(seq(0, 4000, by = 500),1)) +
+        theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10),legend.position = 'bottom')
+  #theme(legend.position = 'bottom', panel.grid.major = element_blank(), axis.text=element_text(size=10))
+  
+  #theme(panel.background = element_rect(fill = "transparent"),legend.position = 'bottom')
+
+p1
+
+
+```
+  
+  
+  
+  
+    
+      
+        
+        
+
+  
+  
+## Indices de Abundancia
+
+### Captura por Unidad de Esfuerzo
+
+```{r echo=FALSE, warning = FALSE, eval= F }
+
+# Indice de Abundancia Pesquero
+
+p2 <-  ggplot(myd, aes(x=yrs))+
+  geom_point(aes(y= cpue, colour="CPUE Obs"), size = 2, shape = 21)+
+  geom_errorbar(aes(ymin = obsC95i, ymax = obsC95s), colour='black', width=0.6) +
+  scale_colour_manual(name='', values=c('CPUE Obs'='black'), guide='legend') +
+  guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+  
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+  ylab('Indice Relativo') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+
+p2
+
+```
+**Figura 2.** Captura por unidad de esfuerzo estandarizada (indice relativo) para la pesquería de Langostino Amarillo, ZEN.  
+  
+    
+      
+      
+La **Figura 2** presenta los niveles de captura por unidad de esfuerzo estandarizados. La información que origina este dato de entrada en el modelo proviene de los monitoreos realizados por IFOP, mediante el Programa de Seguimiento de Pesquerías. Dada la variabilidad asociada a este tipo de monitoreos, previo a la modelación, se realiza un filtro que discrimina aquellos datos no representativos del proceso de pesca, dejando esta fuente de información como un buen indicador de la abundancia a través de los años.  
+  
+    
+    
+  
+### Evaluación Directa
+```{r echo=FALSE, warning = FALSE, message = FALSE, eval= F}
+#Biomasa Cruceros
+
+p3 <-  ggplot(myd, aes(x=yrs))+
+  geom_point(aes(y= Bcru, colour="Biomasa Crucero"), size = 2, shape = 21) +
+  geom_errorbar(aes(ymin = obsS95i, ymax = obsS95s), colour='black', width=0.6) +
+  scale_colour_manual(name='', values=c('Biomasa Crucero'='black'), guide='legend') +
+  guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+  
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+  ylab('Biomasa Crucero (t)') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+
+p3
+
+```
+**Figura 3.** Biomasa de crucero observada en la pesquería de Langostino Amarillo, ZEN.  
+
+Las evaluaciones directas de esta especie, realizadas en conjunto con langostino colorado en la mayoría de las ocasiones, presentan tres etapas históricas en cuando a ejecutores, mientras que, metodológicamente, se reconocen dos períodos que difieren entre si, siendo el primero entre los años 1997 y 2003, mientras que el segundo período se reconoce desde el año 2004 en adelante. Esto presenta cierto grado de incertidumbre que debe ser tomada en cuenta al momento de utilizar estos datos en la evaluación de stock.  
+  
+  
+### Proporción Sexual
+
+
+```{r echo=FALSE, warning = FALSE, message = FALSE, eval= F}
+
+df_prop <- data.frame(c(rep(yrs,2)), c(myd$ph, (1-myd$ph)), c(rep('hembras',34), rep(' machos',34)))
+names <-  c('yrs', 'Prop', 'Sexo')
+colnames(df_prop) <- names
+
+p4 <- ggplot(df_prop, aes(fill=Sexo, y=Prop, x=yrs)) + 
+  geom_bar(stat="identity", position = "fill") +
+  scale_fill_manual("", values = c("hembras" = "gold2", " machos" = "grey")) +
+
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+  ylab('Proporción') + scale_y_continuous(breaks=round(seq(0, 1, by = 0.1),1)) + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+
+
+p4 + annotate("segment", x=1985, xend=2018, y=0.5, yend=0.5, colour="red", linetype="dashed") 
+
+
+
+```
+
+**Figura 4.** Proporción sexual en las capturas de langostino amarillo, ZEN.  
+  
+  
+  
+  El dato de proporción sexual en las capturas proviene del monitoreo realizado por IFOP a bordo de las embarcaciones de muestreo, obteniendose desde un promedio anual de todos los datos.  
+    
+    
+### Estructuras de Talla de las Capturas 
+  
+  Se presentan las estructuras de tallas de las capturas, obtenidas desde los muestreos realizados a bordo en la operación de pesca por observadores científicos de IFOP. Estas estructuras son ponderadas por la captura para representar de mejor manera la operación de pesca.  
+  
+```{r echo=FALSE, warning=FALSE, message=FALSE, eval= F, fig1, fig.height = 8, fig.width = 12}
+
+df1 <- data.frame(dat$ETflom)
+  names <-  c(tallas)
+  colnames(df1) <- names
+  df1$yr <- as.factor(yrs)
+  df1 <- df1[-c(3:8, 29), ]
+
+  #length(df1[, 34])
+  
+  d <- melt(df1)
+  #head(d)
+  colnames(d) <- c('yr', 'Tallas', 'value')
+  
+
+  dfl <- data.frame(d$yr, d$Tallas, d$value)
+  #head(dfl)
+  colnames(dfl) <- c('yrs', 'Tallas', 'pobs')
+  
+  #Plotting
+  p5 <- ggplot(data=dfl, aes(x=Tallas, y=pobs)) +
+    geom_bar(stat="identity", colour='grey') + #xlab('Tallas')
+    ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+    theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=10))
+  
+  p5 <- p5 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
+  p5
+
+```
+**Figura 5.** Composición de tallas de machos en las capturas de langostino amarillo, ZEN
+  
+##  
+En la siguiente hoja se presentan las estructuras de tallas de hembras 
+     
+    
+      
+
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, eval= F, fig.height = 8, fig.width = 12}
+# Hembras Flota Norte
+
+df2 <- data.frame(dat$ETfloh)
+  names <-  c(tallas)
+  colnames(df2) <- names
+  df2$yr <- as.factor(yrs)
+  df2 <- df2[-c(3:8, 29), ]
+
+  #length(df1[, 34])
+  
+  d2 <- melt(df2)
+  #head(d)
+  colnames(d2) <- c('yr', 'Tallas', 'value')
+  
+
+  dfl2 <- data.frame(d2$yr, d2$Tallas, d2$value)
+  #head(dfl)
+  colnames(dfl2) <- c('yrs', 'Tallas', 'pobs')
+  
+  #Plotting
+  p6 <- ggplot(data=dfl2, aes(x=Tallas, y=pobs)) +
+    geom_bar(stat="identity", colour='grey') + #xlab('Tallas')
+    ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+    theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=10))
+  
+  p6 <- p6 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
+  p6
+
+```
+**Figura 6.** Composición de tallas de hembras en las capturas de langostino amarillo, ZEN
+
+  
+### Estructuras de Talla de las Capturas 
+  
+  Se presentan las estructuras de tallas de las cruceros, obtenidas desde los muestreos realizados a bordo en el momento en que se realiza la evaluación directa de este recurso.
+  
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, eval= F, fig.height = 8, fig.width = 12}
+
+df3 <- data.frame(dat$ETcrum)
+  names <-  c(tallas)
+  colnames(df3) <- names
+  df3$yr <- as.factor(yrs)
+  df3 <- df3[-c(1:14, 16, 26), ]
+
+  #length(df1[, 34])
+  
+  d3 <- melt(df3)
+  #head(d)
+  colnames(d3) <- c('yr', 'Tallas', 'value')
+  
+
+  dfl3 <- data.frame(d3$yr, d3$Tallas, d3$value)
+  #head(dfl)
+  colnames(dfl3) <- c('yrs', 'Tallas', 'pobs')
+  
+  #Plotting
+  p7 <- ggplot(data=dfl3, aes(x=Tallas, y=pobs)) +
+    geom_bar(stat="identity", colour='grey') + #xlab('Tallas')
+    ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+    theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=10))
+  
+  p7 <- p7 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
+  p7
+
+```
+**Figura 7.** Composición de tallas de machos provenientes de los cruceros de evaluación directa de langostino amarillo, ZEN
+
+
+## 
+  
+  A continuación se presentan las estructuras de tallas de hembras obtenidas desde el crucero de evaluación directa
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, eval= F, fig.height = 8, fig.width = 12}
+
+df4 <- data.frame(dat$ETcruh)
+  names <-  c(tallas)
+  colnames(df4) <- names
+  df4$yr <- as.factor(yrs)
+  df4 <- df4[-c(1:14, 16, 26), ]
+
+  #length(df1[, 34])
+  
+  d4 <- melt(df4)
+  #head(d)
+  colnames(d4) <- c('yr', 'Tallas', 'value')
+  
+
+  dfl4 <- data.frame(d4$yr, d4$Tallas, d4$value)
+  #head(dfl)
+  colnames(dfl4) <- c('yrs', 'Tallas', 'pobs')
+  
+  #Plotting
+  p8 <- ggplot(data=dfl4, aes(x=Tallas, y=pobs)) +
+    geom_bar(stat="identity", colour='grey') + #xlab('Tallas')
+    ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+    theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=10))
+  
+  p8 <- p8 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
+  p8
+
+```
+**Figura 8.** Composición de tallas en las cruceros de evaluación directa de hembras de langostino amarillo, ZEN.
+
+
+### Madurez sexual
+  
+  Se presenta la ojiva de madurez sexual a la talla utilizada en el modelo para la zona de evaluación norte (ZEN). Este dato proviene del trabajo realizado por Espejo et al., 2001 con hembras de langostino amarillo provenientes de capturas realizadas en la UP norte (Región de Atacama y de Coquimbo), obteniendo una talla media de madurez de 25,63 mm LC.  
+  
+```{r echo=FALSE, warning = FALSE, message = FALSE, eval= F}
+# ojiva de madurez
+
+mat <- dat$Msex
+
+# Plotting
+p9 <- ggplot(NULL, aes(x = tallas)) + 
+    #geom_point(aes(y = PropObs, colour = 'Proporción Observada'), size = 1.7, shape = 21, fill = 'lightcyan') +  
+    geom_line(aes(y = mat, colour = 'Ojiva de Madurez')) +
+    xlab('Longitud Cefalotoráxica (mm)') + scale_x_continuous(breaks=round(seq(10, 52, by = 6),1)) +
+    ylab('Proporción de Madurez') + theme_bw() + 
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+    theme(legend.position = 'bottom') + theme(legend.title=element_blank())
+
+  p9 <- p9 + annotate("segment", x=10, xend=25.63, y=0.5, yend=0.5, colour="black", linetype='dotted') +
+      annotate("segment", x=25.63, xend=25.63, y=0, yend=0.5, colour="black", linetype='dotted') +
+      annotate("text", x=39, y=0.5, label="L50% = 25.63 mm")
+  
+  p9
+
+```
+**Figura 9.** Ojiva de madurez de langostino amarillo, ZEN.
+  
+### Pesos Medios  
+  
+  Los datos de pesos medios provienen del muestreo biológico realizado en laboratorio de los individuos capturados en cada zona. En este caso, tanto machos como hembras provienen desde la zona de evaluación norte, definida en esta evaluación.
+
+```{r echo=FALSE, warning = FALSE, message = FALSE, eval= F}
+# Pesos Medios
+
+Wt_m <- dat$Wt_m
+Wt_h <- dat$Wt_h
+
+
+#Plotting Flota
+p10 <- ggplot(NULL, aes(x = tallas)) + 
+  geom_line(aes(y = Wt_m, colour = 'Machos', linetype = 'Machos')) +
+  geom_line(aes(y = Wt_h, colour = 'Hembras', linetype = 'Hembras')) +
+  scale_color_manual(name = '', values = c('gold2', 'grey')) +      #, limits = c('Machos', 'Hembras'), breaks = c('Machos', 'Hembras')) +
+  scale_linetype_manual(name = '', values = c('solid', 'solid'))    # , limits = c('Machos', 'Hembras'), breaks = c('Machos', 'Hembras'))
+
+p10 <- p10 + theme_bw() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
+  ylab('Peso (g)') + scale_x_continuous('Tallas (mm)', breaks = seq(10, 52, by= 6)) #+ ggtitle('Flota')
+
+p10
+
+```
+**Figura 10.** Pesos medios de machos y hembras utilizados en el modelo de evaluación de stock de langostino amarillo, ZEN.
+  
+# 
+
+**Tabla 1.** Parámetros de crecimiento y mortalidad natural utilizados en la evaluación de stock de langostino amarillo, ZEN.
+```{r echo=FALSE, warning=FALSE, eval= F}
+
+partable <- dat$Param[1:2,c(1,2,3,5)]
+names   <- c('Linf', 'K', 'Lo', 'M')
+colnames(partable) <- names
+
+kable(partable)
+```
+
+
+
+```{r echo=FALSE, warnig = FALSE, eval= FALSE}
+#Graficos opcionales
+#Desembarques
+
+p <- ggplot(myd, aes(x=yrs, y=desem, fill=Periodo)) +
+        geom_bar(stat="identity", colour="white") +
+        scale_fill_manual(values=c("dodgerblue3","gold2")) +
+        xlab('Años') + ylab('Desembarque (ton)') + 
+        theme(legend.title=element_blank()) +
+        scale_x_continuous(breaks=round(seq(min(myd$yrs), max(myd$yrs), by = 3),1)) + 
+        scale_y_continuous(breaks=round(seq(0, 4000, by = 500),1)) +
+        #theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10))
+  #theme(legend.position = 'bottom', panel.grid.major = element_blank(), axis.text=element_text(size=10))
+  
+  theme(panel.background = element_rect(fill = "transparent"),legend.position = 'bottom')
+
+p
+
+#p + geom_text(aes(label=desem/1000), vjust=0)
+desembarques
+p <- ggplot(myd, aes(x=yrs, y=desem, fill=Periodo)) +
+        geom_bar(stat="identity", colour="NA") +
+        scale_fill_manual(values=c("dodgerblue3","gold3")) +
+        xlab('Años') + ylab('Desembarque (ton)') + 
+        theme(legend.title=element_blank()) +
+        scale_x_continuous(breaks=round(seq(min(myd$yrs), max(myd$yrs), by = 3),1)) + 
+        scale_y_continuous(breaks=round(seq(0, 4000, by = 500),1)) +
+        #theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10))
+  theme(legend.position = 'bottom', panel.grid.major = element_blank(), axis.text=element_text(size=10))
+  
+  #theme(panel.background = element_rect(fill = "transparent"),legend.position = 'bottom')
+
+p
+
+```
+

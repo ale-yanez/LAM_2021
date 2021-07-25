@@ -1,0 +1,230 @@
+rm(list=ls())
+library(stringr)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(reshape)
+library(ggthemes)
+source('~/Documents/Rwork/Functions/functions.R')
+source('~/Documents/Rwork/Functions/read.report.R')
+dir.1<-'~/Documents/Rwork/IFOP/LAm_2019/Apartado_datos'
+dir.2<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Estatus_1910/norte/Lamnor1910'
+setwd(dir.2)
+dat.file    = "lamnor1903.dat" #Cambiar despues por info actualizada y borrar esto
+dat1        <- lisread(paste(dir.2,dat.file, sep='/'));
+names(dat1) <- str_trim(names(dat1), side="right")
+dat         <- dat1
+#writeData(paste('lamnor1903','.dat',sep=''), dat, append=FALSE) ### ARREGLAR ESTO PQ GENERA UN DAT DUPLICADO system('mv lamnor1809 lamnor1903') SOLO CambiAR nombre
+#system('mv lamnor1809 lamnor1903') #Cambio nombre
+#CPUE Industrial
+mydc <- (myd[3:34,])
+rm(list=ls())
+library(stringr)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(reshape)
+library(ggthemes)
+source('~/Documents/Rwork/Functions/functions.R')
+source('~/Documents/Rwork/Functions/read.report.R')
+dir.1<-'~/Documents/Rwork/IFOP/LAm_2019/Apartado_datos'
+dir.2<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Estatus_1910/norte/Lamnor1910'
+setwd(dir.2)
+dat.file    = "lamnor1903.dat" #Cambiar despues por info actualizada y borrar esto
+dat1        <- lisread(paste(dir.2,dat.file, sep='/'));
+names(dat1) <- str_trim(names(dat1), side="right")
+dat         <- dat1
+#writeData(paste('lamnor1903','.dat',sep=''), dat, append=FALSE) ### ARREGLAR ESTO PQ GENERA UN DAT DUPLICADO system('mv lamnor1809 lamnor1903') SOLO CambiAR nombre
+#system('mv lamnor1809 lamnor1903') #Cambio nombre
+#
+# ============================================================================== #
+yrs  <- dat$Ind[,1]
+years  <- dat$Ind[,1]
+nyrs <- length(yrs)
+age    <- dat$edades
+nage   <- dat$nages
+ntalla  <- dat$ntallas
+tallas <- dat$tallas
+#Indices
+mydat <-  dat$Ind[,c(1,2,3,4,5)] ; mydat[mydat==0] <- NA
+names <-  c('yrs', 'desem','cpue','Bcru','ph','Periodo')
+myd   <-  data.frame(mydat)
+myd$periodo <- c(rep('A', 16), rep('B',18))
+colnames(myd) <- names
+#Desembarques
+p1 <- ggplot(myd, aes(x=yrs, y=desem, fill=Periodo)) +
+geom_bar(stat="identity", colour="NA") +
+scale_fill_manual(values=c("dodgerblue3","gold2")) +
+xlab('Años') + ylab('Desembarque (ton)') +
+theme(legend.title=element_blank()) +
+scale_x_continuous(breaks=round(seq(min(myd$yrs), max(myd$yrs), by = 3),1)) +
+scale_y_continuous(breaks=round(seq(0, 4000, by = 500),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10),legend.position = 'bottom')
+#theme(legend.position = 'bottom', panel.grid.major = element_blank(), axis.text=element_text(size=10))
+#theme(panel.background = element_rect(fill = "transparent"),legend.position = 'bottom')
+p1
+#CPUE Industrial
+mydc <- (myd[3:34,])
+cI <- ggplot(data=mydc, aes(x=yrs, y=cpue))+
+geom_line(stat='identity', colour = 'blue2') +
+labs(title = 'CPUE', x = 'A?os', y = '(Kg / h.a.)')+
+theme_bw()
+cI
+mydc
+myd
+rm(mydc)
+mydc
+myd
+myd$cpue
+cpue <- myd$cpue; cpue[cpue <= 0.01]   <-NA
+cpue
+obsC95i <- cpue*exp(-1.96*cvcpue); obsC95s <-cpue*exp(1.96*cvcpue)
+cvcpue        <- rep(0.15,nyrs)
+obsC95i <- cpue*exp(-1.96*cvcpue); obsC95s <-cpue*exp(1.96*cvcpue)
+p2 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= cpue, colour="CPUE Obs"), size = 2, shape = 21)+
+geom_errorbar(aes(ymin = obsC95i, ymax = obsC95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('CPUE Obs'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Indice Relativo') + scale_y_continuous(breaks=round(seq(min(predC), 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p2 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= cpue, colour="CPUE Obs"), size = 2, shape = 21)+
+geom_errorbar(aes(ymin = obsC95i, ymax = obsC95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('CPUE Obs'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Indice Relativo') + scale_y_continuous(breaks=round(seq(min(predC), 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p2 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= cpue, colour="CPUE Obs"), size = 2, shape = 21)+
+geom_errorbar(aes(ymin = obsC95i, ymax = obsC95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('CPUE Obs'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Indice Relativo') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p2
+myd
+#Biomasa Cruceros
+p3 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= cpue, colour="CPUE Obs"), size = 2, shape = 21) +
+geom_errorbar(aes(ymin = obsS95i, ymax = obsS95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('Biomasa Crucero'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Biomasa Crucero (t)') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p3
+#Biomasa Cruceros
+p3 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= cpue, colour="CPUE Obs"), size = 2, shape = 21) +
+geom_errorbar(aes(ymin = obsS95i, ymax = obsS95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('Biomasa Crucero'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Biomasa Crucero (t)') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p3
+#Biomasa Cruceros
+p3 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= cpue, colour="Biomasa Crucero"), size = 2, shape = 21) +
+geom_errorbar(aes(ymin = obsS95i, ymax = obsS95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('Biomasa Crucero'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Biomasa Crucero (t)') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p3
+#Biomasa Cruceros
+p3 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= Bcru, colour="Biomasa Crucero"), size = 2, shape = 21) +
+geom_errorbar(aes(ymin = obsS95i, ymax = obsS95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('Biomasa Crucero'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Biomasa Crucero (t)') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p3
+Bcru
+myd
+#Biomasa Cruceros
+p3 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= myd$Bcru, colour="Biomasa Crucero"), size = 2, shape = 21) +
+geom_errorbar(aes(ymin = obsS95i, ymax = obsS95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('Biomasa Crucero'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Biomasa Crucero (t)') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p3
+#
+# ============================================================================== #
+yrs  <- dat$Ind[,1]
+years  <- dat$Ind[,1]
+nyrs <- length(yrs)
+age    <- dat$edades
+nage   <- dat$nages
+ntalla  <- dat$ntallas
+tallas <- dat$tallas
+#Indices
+mydat <-  dat$Ind[,c(1,2,3,4,5)] ; mydat[mydat==0] <- NA
+names <-  c('yrs', 'desem','cpue','Bcru','ph','Periodo')
+myd   <-  data.frame(mydat)
+myd$periodo <- c(rep('A', 16), rep('B',18))
+colnames(myd) <- names
+#cvcpue        <- rep(0.15,nyrs)
+#obsC95i <- cpue*exp(-1.96*cvcpue); obsC95s <-cpue*exp(1.96*cvcpue)
+#Observado
+cpue <- myd$cpue; cpue[cpue <= 0.01]   <-NA
+Bcru <- myd$Bcru ; Bcru[Bcru <= 1]  <-NA
+# Confidence Intervals
+cvcpue        <- rep(0.15,nyrs)
+cvBcru        <- rep(0.30,nyrs)
+obsC95i <- cpue*exp(-1.96*cvcpue); obsC95s <-cpue*exp(1.96*cvcpue)
+obsS95i <- Bcru*exp(-1.96*cvBcru); obsS95s <-Bcru*exp(1.96*cvBcru)
+#Biomasa Cruceros
+p3 <-  ggplot(myd, aes(x=yrs))+
+geom_point(aes(y= Bcru, colour="Biomasa Crucero"), size = 2, shape = 21) +
+geom_errorbar(aes(ymin = obsS95i, ymax = obsS95s), colour='black', width=0.6) +
+scale_colour_manual(name='', values=c('Biomasa Crucero'='black'), guide='legend') +
+guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
+xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2018, by = 3),1)) +
+ylab('Biomasa Crucero (t)') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) +
+theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
+p3
+library(ggplot2)
+theme_set(theme_bw())
+data("mtcars")  # load data
+data("mtcars")  # load data
+mtcars$`car name` <- rownames(mtcars)  # create new column for car names
+mtcars$mpg_z <- round((mtcars$mpg - mean(mtcars$mpg))/sd(mtcars$mpg), 2)  # compute normalized mpg
+mtcars$mpg_type <- ifelse(mtcars$mpg_z < 0, "below", "above")  # above / below avg flag
+mtcars <- mtcars[order(mtcars$mpg_z), ]  # sort
+mtcars$`car name` <- factor(mtcars$`car name`, levels = mtcars$`car name`)  # convert to factor to retain sorted order in plot.
+ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) +
+geom_bar(stat='identity', aes(fill=mpg_type), width=.5)  +
+scale_fill_manual(name="Mileage",
+labels = c("Above Average", "Below Average"),
+values = c("above"="#00ba38", "below"="#f8766d")) +
+labs(subtitle="Normalised mileage from 'mtcars'",
+title= "Diverging Bars") +
+coord_flip()
+View(myd)
+data("mtcars")  # load data
+mtcars$`car name` <- rownames(mtcars)  # create new column for car names
+mtcars$mpg_z <- round((mtcars$mpg - mean(mtcars$mpg))/sd(mtcars$mpg), 2)  # compute normalized mpg
+mtcars$mpg_type <- ifelse(mtcars$mpg_z < 0, "below", "above")  # above / below avg flag
+mtcars <- mtcars[order(mtcars$mpg_z), ]  # sort
+mtcars$`car name` <- factor(mtcars$`car name`, levels = mtcars$`car name`)  # convert to factor to retain sorted order in plot.
+mtcars
