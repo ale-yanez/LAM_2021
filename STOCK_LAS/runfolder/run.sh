@@ -35,7 +35,7 @@ mv -v {*.cor,*.std,*.par,*.rep} $out
 
 if [ -d $1 ]; then
   echo "clean all variables"
-  rm -f *.eva *.log *.rpt *.htp *.cor *.par *.r* *.b* *.p* *.obj *.csv
+  rm -f *.eva *.log *.rpt *.cor *.par *.htp *.r* *.b* *.p* *.obj *.csv
   rm -f *.rep *.bar *.psv *.std $exe.cpp admodel.* variance *.o *.ecm *.mc2 *.mcm
 else
   echo "no clean"

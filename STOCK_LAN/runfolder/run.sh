@@ -4,7 +4,8 @@ echo "Run lam model"
 ext="tpl"
 exe="Lam"
 out="../output"
-DAT="../input/stock_LAS.dat"
+DAT="../input/stock_LAN.dat"
+#DAT="../input/stock_LAN1985.dat"
 don=${PWD##*/}
 
 echo $don
