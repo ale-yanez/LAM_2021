@@ -23,14 +23,14 @@ source('~/Documents/Rwork/Functions/Funciones/functions.R')
 
 # dir.create(file.path('~/Documents/ADMwork/IFOP/2020/Lama_model/Estatus_2008/norte/','Lamnor2008')) # crea el dir3 nuevo y vacío
 system('mkdir ../../estim_nm') #otra opción
-file.copy('../../input/stock_LAN.dat', '../../estim_nm')
+file.copy('../../input/stock_LAS.dat', '../../estim_nm')
 file.copy('../../runfolder/Lam.tpl', '../../estim_nm')
 
 
 # Corre modelos ####
 # Tamaños de muestra originales (50 50 25 25)
 
-system('mv ../../estim_nm/stock_LAN.dat ../../estim_nm/stock_LANnm.dat')
+system('mv ../../estim_nm/stock_LAS.dat ../../estim_nm/stock_LASnm.dat')
 
 # ESTIMACIÓN TAMAÑO MUESTRAS ####
 #system('cd ../','./run_nm.sh')
@@ -40,19 +40,19 @@ system('mv ../../estim_nm/stock_LAN.dat ../../estim_nm/stock_LANnm.dat')
 
 
 #dat1_nor        <- lisread("../../input/stock_LAN.dat");
-dat1_nor        <- lisread("../../estim_nm/stock_LANnm.dat");
+dat1_sur        <- lisread("../../estim_nm/stock_LASnm.dat");
 #dat1_nor        <- lisread("../../input/lamsur2008.dat");
-names(dat1_nor) <- str_trim(names(dat1_nor), side="right")
-dat_nor         <- dat1_nor
+names(dat1_sur) <- str_trim(names(dat1_sur), side="right")
+dat_sur         <- dat1_sur
 rep           <- reptoRlist('../../estim_nm/Lam.rep')
 #rep           <- reptoRlist('../../output/LAmS.rep')
 
 
 # Lee datos
-years1   <- dat_nor$Ind[,1]
-nyears1  <- dat_nor$nyrs
+years1   <- dat_sur$Ind[,1]
+nyears1  <- dat_sur$nyrs
 tallas  <- seq(10,52,1)
-ntallas <- dat_nor$ntallas
+ntallas <- dat_sur$ntallas
 
 #Proporción observada                  
 pobsFm  <-rep$pobs_mflo
@@ -138,13 +138,13 @@ NM_Ian <- data.frame(nmFm=c(nmfm_ari,nmfm_geo,nmfm_arm),nmFh=c(nmf_ari,nmf_geo,n
 NM_Ian
 
 # Reemplazo nm nuevo
-#dat_nor$Ind[,10:13] <- c(rep(50,nyears1), rep(50,nyears1), rep(25,nyears1), rep(25,nyears1))
-#dat_nor$Ind[,10:13] <- c(rep(89,nyears1), rep(54,nyears1), rep(168,nyears1), rep(93,nyears1))
-dat_nor$Ind[,10:13] <- c(rep(NM_Ian[3,1],nyears1), rep(NM_Ian[3,2],nyears1), rep(NM_Ian[3,3],nyears1), rep(NM_Ian[3,4],nyears1))
+#dat_sur$Ind[,10:13] <- c(rep(50,nyears1), rep(50,nyears1), rep(25,nyears1), rep(25,nyears1))
+#dat_sur$Ind[,10:13] <- c(rep(89,nyears1), rep(54,nyears1), rep(168,nyears1), rep(93,nyears1))
+dat_sur$Ind[,10:13] <- c(rep(NM_Ian[3,1],nyears1), rep(NM_Ian[3,2],nyears1), rep(NM_Ian[3,3],nyears1), rep(NM_Ian[3,4],nyears1))
 
 #system('cp -)
-writeData(paste("../../estim_nm/stock_LAN2020.dat",sep=""), dat_nor, append=FALSE)
-system('mv ../../estim_nm/stock_LAN2020.dat ../../estim_nm/stock_LAN.dat')
+writeData(paste("../../estim_nm/stock_LAS2020.dat",sep=""), dat_sur, append=FALSE)
+system('mv ../../estim_nm/stock_LAS2020.dat ../../estim_nm/stock_LAS.dat')
 
 ### Una vez estimados los tamaños de muestra...####
 
