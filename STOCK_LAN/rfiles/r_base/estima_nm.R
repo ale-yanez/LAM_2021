@@ -27,31 +27,19 @@ file.copy('../../runfolder/Lam.tpl', '../../estim_nm')
 
 
 # Corre modelos ####
-
-# Tamaños de muestra originales (100 100 100 100)
+# Tamaños de muestra originales (50 50 25 25)
 
 system('mv ../../estim_nm/stock_LAN.dat ../../estim_nm/stock_LANnm.dat')
-#system('./run_nm.sh')
 
+# ESTIMACIÓN TAMAÑO MUESTRAS ####
+#system('cd ../','./run_nm.sh')
 #system('admb ../../estim_nm/Lam.tpl')
 #system('./LAmS -ind lamsur2008.dat') # Hessiana no parece estar definida positiva en la primera corrida, luego al estimar los nm converge
 
 
 
-
-# ESTIMACIÓN TAMAÑO MUESTRAS ####
-
-#system('mv ../../input/stock_LAN2020.dat ../../input/stock_LANnm.dat')
-#system('mv ../../input/lamsur2008s5.dat ../../input/lamsur2008.dat')
-
-#RUN
-# system('~/admb/admb LAmN.tpl')
-# system('./LAmN -ind lamnor2008.dat')
-
-
-
 #dat1_nor        <- lisread("../../input/stock_LAN.dat");
-dat1_nor        <- lisread("../../estim_nm//stock_LANnm.dat");
+dat1_nor        <- lisread("../../estim_nm/stock_LANnm.dat");
 #dat1_nor        <- lisread("../../input/lamsur2008.dat");
 names(dat1_nor) <- str_trim(names(dat1_nor), side="right")
 dat_nor         <- dat1_nor
@@ -150,21 +138,28 @@ NM_Ian
 
 # Reemplazo nm nuevo
 #dat_nor$Ind[,10:13] <- c(rep(50,nyears1), rep(50,nyears1), rep(25,nyears1), rep(25,nyears1))
+#dat_nor$Ind[,10:13] <- c(rep(89,nyears1), rep(54,nyears1), rep(168,nyears1), rep(93,nyears1))
 dat_nor$Ind[,10:13] <- c(rep(NM_Ian[3,1],nyears1), rep(NM_Ian[3,2],nyears1), rep(NM_Ian[3,3],nyears1), rep(NM_Ian[3,4],nyears1))
 
 #system('cp -)
 writeData(paste("../../estim_nm/stock_LAN2020.dat",sep=""), dat_nor, append=FALSE)
 system('mv ../../estim_nm/stock_LAN2020.dat ../../estim_nm/stock_LAN.dat')
 
-# writeData(paste("../../input/lamsur2008s8.dat",sep=""), dat_nor, append=FALSE)
-# system('mv ../../input/lamsur2008s8.dat ../../input/lamsur2008s5.dat')
+### Una vez estimados los tamaños de muestra...####
+
+file.copy('../../input/stock_LAN.dat', '../../estim_nm')
+
+nm_nor        <- lisread("../../estim_nm/stock_LAN.dat");
+names(nm_nor) <- str_trim(names(dat1_nor), side="right")
+final_nor         <- nm_nor
+final_nor$Ind[,10:13] <- dat_nor$Ind[,10:13]
+
+writeData(paste("../../estim_nm/stock_LAN2020.dat",sep=""), final_nor, append=FALSE)
+system('mv ../../estim_nm/stock_LAN2020.dat ../../estim_nm/stock_LAN.dat')
 
 
-
-### Una vez estimados los tamaños de muestra...
-
-# Corre el MODELO BASE ####
-system('mv lamnor1910s6.dat lamnor1910.dat')
-system('~/admb/admb LAM')
-system('./LAM -ind lamnor1910.dat')
-
+# # Corre el MODELO BASE ####
+# system('mv lamnor1910s6.dat lamnor1910.dat')
+# system('~/admb/admb LAM')
+# system('./LAM -ind lamnor1910.dat')
+# 
