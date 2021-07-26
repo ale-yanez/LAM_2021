@@ -1,3 +1,4 @@
+rm(list=ls())
 # Funciones y Directorios ####
 library(rstudioapi)
 library(ggplot2)
@@ -11,8 +12,7 @@ setwd(dirname(current_path ))
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-#out1 <- read.admb("../LAmN")
-out1 <- read.admb("~/Documents/ADMwork/IFOP/2020/Lama_model/Estatus_2008/norte/Lamnor2008cpue_zero/LAM_nor2008")
+out1 <- read.admb("../../output/Lam")
 
 # Para graficar ... ####
  yrs <- out1$YRS
@@ -123,10 +123,9 @@ plot <- ggarrange(p1_2, p2, p3,
                   ncol = 1, nrow = 3, align = "v", common.legend = TRUE, legend = "bottom")
 
 
-ggexport(p_1, filename = "Fig1.jpeg", width=6.5, height=8, dpi=300)
-ggexport(plot, filename = "Fig1_2.jpeg", width=6.5, height=8, dpi=300)
-ggsave(plot, filename='Fig1.png', width=6.5, height=8, dpi=300)
-
+# ggexport(p_1, filename = "Fig1.jpeg", width=6.5, height=8, dpi=300)
+# ggexport(plot, filename = "Fig1_2.jpeg", width=6.5, height=8, dpi=300)
+ggsave(plot, filename='../../figures/base/Fig1.png', width=6.5, height=8, dpi=300)
 
 # Composición de tallas Flota ####
 
@@ -167,9 +166,7 @@ p1 <- ggplot(data=d_mflo, aes(x=Tallas, y=pobs)) +
 p1 <- p1 + facet_wrap(~ yrs, dir = 'v', scales='free')  + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.16))
 p1
 
-ggexport(p1, filename = "Fig2_TallasM_flo.jpeg")
-ggsave(p1, filename = "Fig2_TallasM_flo.png")
-
+ggsave(p1, filename = "../../figures/base/Fig2_TallasM_flo.png")
 
 # Hembras Flota
 
@@ -208,9 +205,7 @@ p2 <- ggplot(data=d_hflo, aes(x=Tallas, y=pobs)) +
 p2 <- p2 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
 p2
 
-ggexport(p2, filename = "Fig3_TallasH_flo.jpeg")
-ggsave(p2, filename = "Fig3_TallasH_flo.png")
-
+ggsave(p2, filename = "../../figures/base/Fig3_TallasH_flo.png")
 
 # Composición de tallas Crucero ####
 
@@ -249,9 +244,7 @@ p3 <- ggplot(data=d_mcru, aes(x=Tallas, y=pobs)) +
 p3 <- p3 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.13))
 p3
 
-ggexport(p3, filename = "Fig4_TallasM_cru.jpeg")
-ggsave(p3, filename = "Fig4_TallasM_cru.png")
-
+ggsave(p3, filename = "../../figures/base/Fig4_TallasM_cru.png")
 
 # Hembras Crucero
 
@@ -288,9 +281,7 @@ p4 <- ggplot(data=d_hcru, aes(x=Tallas, y=pobs)) +
 p4 <- p4 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
 p4
 
-ggexport(p4, filename = "Fig5_TallasH_cru.jpeg")
-ggsave(p4, filename = "Fig5_TallasH_cru.png")
-
+ggsave(p4, filename = "../../figures/base/Fig5_TallasH_cru.png")
 
 # Tallas Medias Flota ####
 
@@ -329,11 +320,8 @@ p6
 plot1 <- ggarrange(p5, p6, ncol = 2, nrow = 1, align = "h", common.legend = TRUE, legend = "bottom")
 plot2 <- ggarrange(p5, p6, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
 
-ggexport(plot1, filename = "Fig6_1.jpeg", width=9, height=6, dpi=300)
-ggexport(plot2, filename = "Fig6_2.jpeg", width=6.5, height=8, dpi=300)
-
-ggsave(plot1, filename = "Fig6_1.png", width=9, height=6, dpi=300)
-ggsave(plot2, filename = "Fig6_2.png", width=6.5, height=8, dpi=300)
+ggsave(plot1, filename = "../../figures/base/Fig6_1.png", width=9, height=6, dpi=300)
+ggsave(plot2, filename = "../../figures/base/Fig6_2.png", width=6.5, height=8, dpi=300)
 
 
 # Tallas Medias Crucero ####
@@ -374,11 +362,8 @@ p8
 plot3 <- ggarrange(p7, p8, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
 plot4 <- ggarrange(p7, p8, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
 
-ggexport(plot3, filename = "Fig7_1.jpeg", width=9, height=6, dpi=300)
-ggexport(plot4, filename = "Fig7_2.jpeg", width=6.5, height=8, dpi=300)
-
-ggsave(plot3, filename = "Fig7_1.png", width=9, height=6, dpi=300)
-ggsave(plot4, filename = "Fig7_2.png", width=6.5, height=8, dpi=300)
+ggsave(plot3, filename = "../../figures/base/Fig7_1.png", width=9, height=6, dpi=300)
+ggsave(plot4, filename = "../../figures/base/Fig7_2.png", width=6.5, height=8, dpi=300)
 
 
 # Selectividad ####
@@ -415,9 +400,8 @@ p10 <- p10 + theme_bw() +
 p10
 
 psel <- ggarrange(p9, p10, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
-ggexport(psel, filename = "Fig8.jpeg")
-ggsave(psel, filename = "Fig8.png")
+ggsave(psel, filename = "../../figures/base/Fig8.png")
 
 psel2 <- ggarrange(p9, p10, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
-ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
-ggsave(psel2, filename = "Fig8_2.png", width=7, height=8, dpi=300)
+#ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
+ggsave(psel2, filename = "../../figures/base/Fig8_2.png", width=7, height=8, dpi=300)

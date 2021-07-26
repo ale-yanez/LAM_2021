@@ -1,3 +1,4 @@
+rm(list=ls())
 # Funciones y Directorios ####
 library(rstudioapi)
 library(ggplot2)
@@ -11,12 +12,10 @@ setwd(dirname(current_path ))
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-#out1 <- read.admb("../LAM_nor2008")
-out1 <- read.admb("~/Documents/ADMwork/IFOP/2020/Lama_model/Estatus_2008/norte/Lamnor2008cpue_zero/LAM_nor2008")
-std1 <- read.table('~/Documents/ADMwork/IFOP/2020/Lama_model/Estatus_2008/norte/Lamnor2008cpue_zero/LAM_nor2008.std', header=T, sep="", na="NA", fill=T)
 
-out2 <- read.admb("~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/Lamnor2003/LAM_nor2003")
-std2 <- read.table('~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/Lamnor2003/LAM_nor2003.std', header=T, sep="", na="NA", fill=T)
+out1 <- read.admb("../../output/Lam")
+std1 <- read.table('../../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+
 
 # Para graficar ... ####
  yrs <- out1$YRS
@@ -26,57 +25,57 @@ std2 <- read.table('~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/Lam
 
 # #predichos y estimados 
  Rec_est1      <- subset(std1,name=='Restim')$value
- Rec_est2      <- subset(std2,name=='Restim')$value
+ #Rec_est2      <- subset(std2,name=='Restim')$value
  desvRec1      <- subset(std1,name=='log_dev_Ro')$value
- desvRec2      <- subset(std2,name=='dev_log_Ro')$value
+ #desvRec2      <- subset(std2,name=='dev_log_Ro')$value
  BT_est1       <- subset(std1,name=='BT')$value
- BT_est2       <- subset(std2,name=='BT')$value
+ #BT_est2       <- subset(std2,name=='BT')$value
  BD_est1       <- subset(std1,name=='BD')$value
- BD_est2       <- subset(std2,name=='BD')$value
+ #BD_est2       <- subset(std2,name=='BD')$value
  F_est1        <- exp(subset(std1,name=='log_Fh')$value)
- F_est2        <- exp(subset(std2,name=='log_Fh')$value)
+# F_est2        <- exp(subset(std2,name=='log_Fh')$value)
  F_est1_b      <- exp(subset(std1,name=='log_Fh')$value) + exp(subset(std1,name=='log_Fm')$value)
- F_est2_b      <- exp(subset(std2,name=='log_Fh')$value) + exp(subset(std2,name=='log_Fm')$value)
+# F_est2_b      <- exp(subset(std2,name=='log_Fh')$value) + exp(subset(std2,name=='log_Fm')$value)
  
 # # std 
  stdRec1       <- subset(std1,name=='Restim')$std
- stdRec2       <- subset(std2,name=='Restim')$std
+ #stdRec2       <- subset(std2,name=='Restim')$std
  stddesvRec1   <- subset(std1,name=='log_dev_Ro')$std
- stddesvRec2   <- subset(std2,name=='dev_log_Ro')$std
+# stddesvRec2   <- subset(std2,name=='dev_log_Ro')$std
  stdBT1        <- subset(std1,name=='BT')$std
- stdBT2        <- subset(std2,name=='BT')$std
+ #stdBT2        <- subset(std2,name=='BT')$std
  stdBD1        <- subset(std1,name=='BD')$std
- stdBD2        <- subset(std2,name=='BD')$std
+ #stdBD2        <- subset(std2,name=='BD')$std
  stdF1         <- subset(std1,name=='log_Fh')$std
- stdF2         <- subset(std2,name=='log_Fh')$std
+ #stdF2         <- subset(std2,name=='log_Fh')$std
  stdF1_b       <- subset(std1,name=='log_Fh')$std + subset(std1,name=='log_Fm')$std
- stdF2_b       <- subset(std2,name=='log_Fh')$std + subset(std2,name=='log_Fm')$std
+ #stdF2_b       <- subset(std2,name=='log_Fh')$std + subset(std2,name=='log_Fm')$std
  
 # # Confidence Intervals
  rec1_lwr      <-Rec_est1-1.96*stdRec1
  rec1_upr      <-Rec_est1+1.96*stdRec1
- rec2_lwr      <-Rec_est2-1.96*stdRec2
- rec2_upr      <-Rec_est2+1.96*stdRec2
+ # rec2_lwr      <-Rec_est2-1.96*stdRec2
+ # rec2_upr      <-Rec_est2+1.96*stdRec2
  desvrec1_lwr  <- desvRec1-1.96*stddesvRec1
  desvrec1_upr  <- desvRec1+1.96*stddesvRec1
- desvrec2_lwr  <- desvRec2-1.96*stddesvRec2
- desvrec2_upr  <- desvRec2+1.96*stddesvRec2
+ # desvrec2_lwr  <- desvRec2-1.96*stddesvRec2
+ # desvrec2_upr  <- desvRec2+1.96*stddesvRec2
  BT1_lwr       <-BT_est1-1.96*stdBT1
  BT1_upr       <-BT_est1+1.96*stdBT1
- BT2_lwr       <-BT_est2-1.96*stdBT2
- BT2_upr       <-BT_est2+1.96*stdBT2
+ # BT2_lwr       <-BT_est2-1.96*stdBT2
+ # BT2_upr       <-BT_est2+1.96*stdBT2
  BD1_lwr       <-BD_est1-1.96*stdBD1
  BD1_upr       <-BD_est1+1.96*stdBD1
- BD2_lwr       <-BD_est2-1.96*stdBD2
- BD2_upr       <-BD_est2+1.96*stdBD2
+ # BD2_lwr       <-BD_est2-1.96*stdBD2
+ # BD2_upr       <-BD_est2+1.96*stdBD2
  F1_lwr        <-exp(log(F_est1)-1.96*stdF1)
  F1_upr        <-exp(log(F_est1)+1.96*stdF1)
- F2_lwr        <-exp(log(F_est2)-1.96*stdF2)
- F2_upr        <-exp(log(F_est2)+1.96*stdF2)
+ # F2_lwr        <-exp(log(F_est2)-1.96*stdF2)
+ # F2_upr        <-exp(log(F_est2)+1.96*stdF2)
  F1_lwr_b        <-exp(log(F_est1_b)-1.96*stdF1_b)
  F1_upr_b        <-exp(log(F_est1_b)+1.96*stdF1_b)
- F2_lwr_b        <-exp(log(F_est2_b)-1.96*stdF2_b)
- F2_upr_b        <-exp(log(F_est2_b)+1.96*stdF2_b)
+ # F2_lwr_b        <-exp(log(F_est2_b)-1.96*stdF2_b)
+ # F2_upr_b        <-exp(log(F_est2_b)+1.96*stdF2_b)
 
 
 #Var Pop LAM MODEL ###
@@ -109,7 +108,7 @@ p9 <- ggplot(data = NULL, aes(x = yrs)) +
   #geom_line(aes(y = c(desvRec2,NA), colour = 'anterior', linetype = 'anterior')) +
   geom_ribbon(data=NULL, aes(ymin=desvrec1_lwr, ymax=desvrec1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(desvrec2_lwr,NA), ymax=c(desvrec2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(0,36)), colour = '', linetype = '')) +
+  geom_line(aes(y = c(rep(0,42)), colour = '', linetype = '')) +
   scale_color_manual(name = '',
                      values = c('royalblue3', 'black'),
                      limits = c('actual', ''),
@@ -128,7 +127,7 @@ p9
 plot_rec <- ggarrange(p8, p9, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "none")
 
 #ggexport(plot_rec, filename = "VarPop1_Rec.pdf", width=8, height=6.5, dpi=300)
-ggsave(plot_rec, filename = "VarPop1_Rec.png", width=7, height=8, dpi=300)
+ggsave(plot_rec, filename = "../../figures/base/VarPop1_Rec.png", width=7, height=8, dpi=300)
 
 # Biomasa Total ####
 
@@ -137,7 +136,7 @@ p10 <- ggplot(data = NULL, aes(x = yrs)) +
   #geom_line(aes(y = c(BT_est2,NA), colour = 'anterior', linetype = 'anterior')) +
   geom_ribbon(data=NULL, aes(ymin=BT1_lwr, ymax=BT1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(BT2_lwr,NA), ymax=c(BT2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(1,36)), colour = 'Brms', linetype = '')) +
+  geom_line(aes(y = c(rep(1,42)), colour = 'Brms', linetype = '')) +
   scale_color_manual(name = '',
                      values = c('royalblue3', 'chartreuse4'),
                      limits = c('actual', 'Brms'),
@@ -161,7 +160,7 @@ p11 <- ggplot(data = NULL, aes(x = yrs)) +
   #geom_line(aes(y = c(BD_est2,NA), colour = 'anterior', linetype = 'anterior')) +
   geom_ribbon(data=NULL, aes(ymin=BD1_lwr, ymax=BD1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(BD2_lwr,NA), ymax=c(BD2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(Brms,36)), colour = 'Brms', linetype = 'Brms')) +
+  geom_line(aes(y = c(rep(Brms,42)), colour = 'Brms', linetype = 'Brms')) +
   annotate("text", x=1987, y=1930, label="Brms") +
 
   scale_color_manual(name = '',
@@ -181,7 +180,7 @@ p11
 
 plot_B <- ggarrange(p10, p11, ncol = 1, nrow = 2, align = "v", common.legend = T, legend = "none")
 #ggexport(plot_B, filename = "VarPop2_Biom.pdf", width=8, height=6.5, dpi=300)
-ggsave(plot_B, filename = "VarPop2_Biom.png", width=8, height=6.5, dpi=300)
+ggsave(plot_B, filename = "../../figures/base/VarPop2_Biom.png", width=8, height=6.5, dpi=300)
 
 
 # Mortalidad por Pesca ####
@@ -189,12 +188,12 @@ ggsave(plot_B, filename = "VarPop2_Biom.png", width=8, height=6.5, dpi=300)
 p12 <- ggplot(data = NULL, aes(x = yrs)) + 
   geom_line(aes(y = F_est1, colour = 'actual', linetype = 'actual')) +
   #geom_line(aes(y = c(F_est2,NA), colour = 'anterior', linetype = 'anterior')) +
-  geom_ribbon(data=NULL, aes(ymin=F1_lwr, ymax=F1_upr), fill = 'grey60', alpha = 0.4) + 
+  #geom_ribbon(data=NULL, aes(ymin=F1_lwr, ymax=F1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(F2_lwr,NA), ymax=c(F2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(M,36)), colour = 'M', linetype = 'M')) +
-  geom_line(aes(y = c(rep(Frms,36)), colour = 'Frms', linetype = 'Frms')) +
+  geom_line(aes(y = c(rep(M,42)), colour = 'M', linetype = 'M')) +
+  geom_line(aes(y = c(rep(Frms,42)), colour = 'Frms', linetype = 'Frms')) +
   annotate("text", x=1986, y=0.32, label="M") +
-  annotate("text", x=1986, y=0.24, label="Frms") +
+  annotate("text", x=1986, y=1.05, label="Frms") +
   
   scale_color_manual(name = '',
                      values = c('royalblue3', 'dodgerblue3','red'),
@@ -211,7 +210,7 @@ p12 <- p12 + theme_bw() +
 
 p12
 #ggexport(p12, filename = "VarPop3_Fh.pdf", width=8, height=6.5, dpi=300)
-ggsave(p12, filename = "VarPop3_Fh.png", width=8, height=6.5, dpi=300)
+ggsave(p12, filename = "../../figures/base/VarPop3_Fh.png", width=8, height=6.5, dpi=300)
 
 
 # Mortalidad por Pesca b ####

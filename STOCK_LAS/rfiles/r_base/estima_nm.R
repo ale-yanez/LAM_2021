@@ -148,15 +148,15 @@ system('mv ../../estim_nm/stock_LAS2020.dat ../../estim_nm/stock_LAS.dat')
 
 ### Una vez estimados los tamaños de muestra...####
 
-file.copy('../../input/stock_LAN.dat', '../../estim_nm')
+file.copy('../../input/stock_LAS.dat', '../../estim_nm')
 
-nm_nor        <- lisread("../../estim_nm/stock_LAN.dat");
-names(nm_nor) <- str_trim(names(dat1_nor), side="right")
-final_nor         <- nm_nor
-final_nor$Ind[,10:13] <- dat_nor$Ind[,10:13]
+nm_sur        <- lisread("../../estim_nm/stock_LAS.dat");
+names(nm_sur) <- str_trim(names(dat1_sur), side="right")
+final_sur         <- nm_sur
+final_sur$Ind[,10:13] <- dat_sur$Ind[,10:13]
 
-writeData(paste("../../estim_nm/stock_LAN2020.dat",sep=""), final_nor, append=FALSE)
-system('mv ../../estim_nm/stock_LAN2020.dat ../../estim_nm/stock_LAN.dat')
+writeData(paste("../../estim_nm/stock_LAS2020.dat",sep=""), final_sur, append=FALSE)
+system('mv ../../estim_nm/stock_LAS2020.dat ../../estim_nm/stock_LAs.dat')
 
 
 # # Corre el MODELO BASE ####
