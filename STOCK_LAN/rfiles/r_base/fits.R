@@ -12,7 +12,6 @@ library(devtools)
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
 out1 <- read.admb("../../output/Lam")
-#out1 <- read.admb("~/Documents/ADMwork/IFOP/2020/Lama_model/Estatus_2008/norte/Lamnor2008cpue_zero/LAM_nor2008")
 
 names(out1)
 # Para graficar ... ####
