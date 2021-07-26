@@ -6,8 +6,8 @@ library(ggpubr)
 library(devtools)
 
 # Getting the path of your current open file
-current_path = rstudioapi::getActiveDocumentContext()$path 
-setwd(dirname(current_path ))
+#current_path = rstudioapi::getActiveDocumentContext()$path 
+#setwd(dirname(current_path ))
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
@@ -76,7 +76,7 @@ p1_2 <-  ggplot(NULL, aes(x=yrs)) +
   scale_colour_manual(name='', values=c('Estimado'='royalblue3', 'Observado'='black'), guide='legend') +
   guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
   
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs)-1, 2020, by = 3),1)) +
   ylab('Desembarque (t)') + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
@@ -93,7 +93,7 @@ p2 <-  ggplot(NULL, aes(x=yrs)) +
   scale_colour_manual(name='', values=c('CPUE Est'='royalblue3', 'CPUE Obs'='black'), guide='legend') +
   guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
   
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs)-1, 2020, by = 3),1)) +
   ylab('Indice Relativo') + scale_y_continuous(breaks=round(seq(min(predC), 3, by = 0.5),1)) + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
@@ -110,7 +110,7 @@ p3 <-  ggplot(NULL, aes(x=yrs)) +
   scale_colour_manual(name='', values=c('Crucero Est'='royalblue3', 'Crucero Obs'='black'), guide='legend') +
   guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
   
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs)-1, 2020, by = 3),1)) +
   ylab('Biomasa (t)') +
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
@@ -118,15 +118,15 @@ p3 <-  ggplot(NULL, aes(x=yrs)) +
 p3
 
 
-p_1 <- ggarrange(p1, p2, p3,
-                 ncol = 1, nrow = 3, align = "v")
+#p_1 <- ggarrange(p1, p2, p3,
+#                 ncol = 1, nrow = 3, align = "v")
 plot <- ggarrange(p1_2, p2, p3,
                   ncol = 1, nrow = 3, align = "v", common.legend = TRUE, legend = "bottom")
 
 
-ggexport(p_1, filename = "Fig1.jpeg", width=6.5, height=8, dpi=300)
-ggexport(plot, filename = "Fig1_2.jpeg", width=6.5, height=8, dpi=300)
-ggsave(plot, filename='Fig1.png', width=6.5, height=8, dpi=300)
+#ggexport(p_1, filename = "Fig1.jpeg", width=6.5, height=8, dpi=300)
+#ggexport(plot, filename = "Fig1_2.jpeg", width=6.5, height=8, dpi=300)
+ggsave(plot, filename='../../figures/base/Fig1.png', width=6.5, height=8, dpi=300)
 
 
 # Composición de tallas Flota ####
@@ -168,8 +168,8 @@ p1 <- ggplot(data=d_mflo, aes(x=Tallas, y=pobs)) +
 p1 <- p1 + facet_wrap(~ yrs, dir = 'v', scales='free')  + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.16))
 p1
 
-ggexport(p1, filename = "Fig2_TallasM_flo.jpeg")
-ggsave(p1, filename = "Fig2_TallasM_flo.png")
+#ggexport(p1, filename = "Fig2_TallasM_flo.jpeg")
+ggsave(p1, filename = "../../figures/base/Fig2_TallasM_flo.png")
 
 
 # Hembras Flota
@@ -209,8 +209,8 @@ p2 <- ggplot(data=d_hflo, aes(x=Tallas, y=pobs)) +
 p2 <- p2 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
 p2
 
-ggexport(p2, filename = "Fig3_TallasH_flo.jpeg")
-ggsave(p2, filename = "Fig3_TallasH_flo.png")
+#ggexport(p2, filename = "Fig3_TallasH_flo.jpeg")
+ggsave(p2, filename = "../../figures/base/Fig3_TallasH_flo.png")
 
 
 # Composición de tallas Crucero ####
@@ -250,8 +250,8 @@ p3 <- ggplot(data=d_mcru, aes(x=Tallas, y=pobs)) +
 p3 <- p3 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.13))
 p3
 
-ggexport(p3, filename = "Fig4_TallasM_cru.jpeg")
-ggsave(p3, filename = "Fig4_TallasM_cru.png")
+#ggexport(p3, filename = "Fig4_TallasM_cru.jpeg")
+ggsave(p3, filename = "../../figures/base/Fig4_TallasM_cru.png")
 
 
 # Hembras Crucero
@@ -289,8 +289,8 @@ p4 <- ggplot(data=d_hcru, aes(x=Tallas, y=pobs)) +
 p4 <- p4 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
 p4
 
-ggexport(p4, filename = "Fig5_TallasH_cru.jpeg")
-ggsave(p4, filename = "Fig5_TallasH_cru.png")
+#ggexport(p4, filename = "Fig5_TallasH_cru.jpeg")
+ggsave(p4, filename = "../../figures/base/Fig5_TallasH_cru.png")
 
 
 # Tallas Medias Flota ####
@@ -330,11 +330,11 @@ p6
 plot1 <- ggarrange(p5, p6, ncol = 2, nrow = 1, align = "h", common.legend = TRUE, legend = "bottom")
 plot2 <- ggarrange(p5, p6, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
 
-ggexport(plot1, filename = "Fig6_1.jpeg", width=9, height=6, dpi=300)
-ggexport(plot2, filename = "Fig6_2.jpeg", width=6.5, height=8, dpi=300)
+#ggexport(plot1, filename = "Fig6_1.jpeg", width=9, height=6, dpi=300)
+#ggexport(plot2, filename = "Fig6_2.jpeg", width=6.5, height=8, dpi=300)
 
-ggsave(plot1, filename = "Fig6_1.png", width=9, height=6, dpi=300)
-ggsave(plot2, filename = "Fig6_2.png", width=6.5, height=8, dpi=300)
+ggsave(plot1, filename = "../../figures/base/Fig6_1.png", width=9, height=6, dpi=300)
+ggsave(plot2, filename = "../../figures/base/Fig6_2.png", width=6.5, height=8, dpi=300)
 
 
 # Tallas Medias Crucero ####
@@ -375,11 +375,11 @@ p8
 plot3 <- ggarrange(p7, p8, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
 plot4 <- ggarrange(p7, p8, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
 
-ggexport(plot3, filename = "Fig7_1.jpeg", width=9, height=6, dpi=300)
-ggexport(plot4, filename = "Fig7_2.jpeg", width=6.5, height=8, dpi=300)
+# ggexport(plot3, filename = "Fig7_1.jpeg", width=9, height=6, dpi=300)
+# ggexport(plot4, filename = "Fig7_2.jpeg", width=6.5, height=8, dpi=300)
 
-ggsave(plot3, filename = "Fig7_1.png", width=9, height=6, dpi=300)
-ggsave(plot4, filename = "Fig7_2.png", width=6.5, height=8, dpi=300)
+ggsave(plot3, filename = "../../figures/base/Fig7_1.png", width=9, height=6, dpi=300)
+ggsave(plot4, filename = "../../figures/base/Fig7_2.png", width=6.5, height=8, dpi=300)
 
 
 # Selectividad ####
@@ -416,9 +416,9 @@ p10 <- p10 + theme_bw() +
 p10
 
 psel <- ggarrange(p9, p10, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
-ggexport(psel, filename = "Fig8.jpeg")
-ggsave(psel, filename = "Fig8.png")
+#ggexport(psel, filename = "Fig8.jpeg")
+ggsave(psel, filename = "../../figures/base/Fig8.png")
 
 psel2 <- ggarrange(p9, p10, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
-ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
-ggsave(psel2, filename = "Fig8_2.png", width=7, height=8, dpi=300)
+#ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
+ggsave(psel2, filename = "../../figures/base/Fig8_2.png", width=7, height=8, dpi=300)
