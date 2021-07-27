@@ -1,3 +1,4 @@
+rm(list=ls())
 # Funciones y Directorios ####
 library(rstudioapi)
 library(ggplot2)
@@ -11,9 +12,9 @@ setwd(dirname(current_path ))
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-#out1 <- read.admb("../LAM_nor2008")
-out1 <- read.admb("~/Documents/ADMwork/IFOP/2020/Lama_model/Estatus_2008/norte/Lamnor2008cpue_zero/LAM_nor2008")
-std1 <- read.table('~/Documents/ADMwork/IFOP/2020/Lama_model/Estatus_2008/norte/Lamnor2008cpue_zero/LAM_nor2008.std', header=T, sep="", na="NA", fill=T)
+out1 <- read.admb("../../output/Lam")
+std1 <- read.table('../../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+
 
 
 # # Para graficar ... ####
@@ -48,8 +49,8 @@ dir()
 p11_2 <- ggplot(data = NULL, aes(x = yrs)) + 
   geom_line(aes(y = BD_est1, colour = 'actual', linetype = 'actual')) +
   geom_ribbon(data=NULL, aes(ymin=BD1_lwr, ymax=BD1_upr), fill = 'grey60', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(Brms,36)), colour = 'Brms', linetype = 'Brms')) +
-  geom_line(aes(y = c(rep(B0,36)), colour = 'BDo', linetype = 'BDo')) +
+  geom_line(aes(y = c(rep(Brms,42)), colour = 'Brms', linetype = 'Brms')) +
+  geom_line(aes(y = c(rep(B0,42)), colour = 'BDo', linetype = 'BDo')) +
    annotate("text", x=1986, y=4200, label="BDo") +
    annotate("text", x=1986, y=1600, label="Brms") +
    
@@ -73,8 +74,8 @@ p11_2
 
 p12_2 <- ggplot(data = NULL, aes(x = yrs)) + 
   geom_line(aes(y = F_est1, colour = 'actual', linetype = 'actual')) +
-  geom_ribbon(data=NULL, aes(ymin=F1_lwr, ymax=F1_upr), fill = 'grey60', alpha = 0.4) +
-  geom_line(aes(y = c(rep(Frms,36)), colour = 'Frms', linetype = 'Frms')) +
+  #geom_ribbon(data=NULL, aes(ymin=F1_lwr, ymax=F1_upr), fill = 'grey60', alpha = 0.4) +
+  geom_line(aes(y = c(rep(Frms,42)), colour = 'Frms', linetype = 'Frms')) +
   annotate("text", x=1986, y=0.24, label="Frms") +
   
   scale_color_manual(name = '',
@@ -100,7 +101,7 @@ p_1 <- ggarrange(p11_2, p12_2,
 
 p13 <- ggplot(data = NULL, aes(x = yrs)) + 
   geom_line(aes(y = BD_est1/Brms, colour = 'actual', linetype = 'actual')) +
-  geom_line(aes(y = c(rep(1,36)), colour = 'Brms', linetype = 'Brms')) +
+  geom_line(aes(y = c(rep(1,42)), colour = 'Brms', linetype = 'Brms')) +
   annotate("text", x=1986, y=0.9, label="Brms") +
   scale_color_manual(name = '',
                      values = c('royalblue3', 'chartreuse3'),
@@ -121,7 +122,7 @@ p13
 
 p14 <- ggplot(data = NULL, aes(x = yrs)) + 
   geom_line(aes(y = F_est1/Frms, colour = 'actual', linetype = 'actual')) +
-  geom_line(aes(y = c(rep(1,36)), colour = 'Frms', linetype = 'Frms')) +
+  geom_line(aes(y = c(rep(1,42)), colour = 'Frms', linetype = 'Frms')) +
   annotate("text", x=1986, y=0.9, label="Frms") +
   scale_color_manual(name = '',
                      values = c('royalblue3', 'red'),
@@ -142,27 +143,25 @@ p14
 p_2 <- ggarrange(p13, p14, ncol = 2, nrow = 1)
 
 plot <- ggarrange(p_1, p_2, ncol = 1, nrow = 2, align = "h", common.legend = F, legend = "bottom")
-#ggexport(plot, filename = "PBRs.pdf", width=7.5, height=6, dpi=300)
-ggsave(plot, filename = "PBRs.png", width=7.5, height=6, dpi=300)
-
+ggsave(plot, filename = "../../figures/base/PBRs.png", width=7.5, height=6, dpi=300)
 
 # txt ####
 
 VarPobl<- cbind(years=yrs, BD=BD_est1, BT=BT_est1, R=Rec_est1, F_est=F_est1, "F/FRMS"=F_est1/Frms, "BD/BDRMS"=BD_est1/Brms, "Y/BT"=predD/BT_est1)
-write.table(VarPobl, 'Var_Pobl.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
+write.table(VarPobl, '../../tables/base/Var_Pobl.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
 
 
 like<- cbind(CPUE=out1$LIKE[1], Crucero=out1$LIKE[2], Desemb=out1$LIKE[3], prop=out1$LIKE[4], 
              prop_mflo=out1$LIKE[5], prop_hflo=out1$LIKE[6], pobs_crum=out1$LIKE[7], pobs_cruh=out1$LIKE[8],
              Ro=out1$LIKE[9], No_m=out1$LIKE[10], No_h=out1$LIKE[11], Lo_m=out1$LIKE[12], Lo_h=out1$LIKE[13], cvage_m=out1$LIKE[14], cvage_h=out1$LIKE[15])
 like
-write.table(like, 'verosimilitud.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
+write.table(like, '../../tables/base/verosimilitud.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
 
 
 
 # Diagrama de Fases ####
 
-estatus <- "Asesoría de agosto 2020"
+estatus <- "Asesoría de agosto 2021"
 
   years1       <- yrs
   Bo1           <- out1$BDoLP              # Paso 4: Obtenci?n de Bo
