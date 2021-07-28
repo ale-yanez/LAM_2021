@@ -12,8 +12,8 @@ setwd(dirname(current_path ))
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-out1 <- read.admb("../../output/Lam")
-std1 <- read.table('../../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+out1 <- read.admb("../../output/logistic_sel/Lam")
+std1 <- read.table('../../output/logistic_sel/Lam.std', header = T, sep = '', na='NA', fill = T)
 
 
 # # Para graficar ... ####
@@ -143,20 +143,20 @@ p_2 <- ggarrange(p13, p14, ncol = 2, nrow = 1)
 
 plot <- ggarrange(p_1, p_2, ncol = 1, nrow = 2, align = "h", common.legend = F, legend = "bottom")
 #ggexport(plot, filename = "PBRs.pdf", width=7.5, height=6, dpi=300)
-ggsave(plot, filename = "../../figures/base/PBRs.png", width=7.5, height=6, dpi=300)
+ggsave(plot, filename = "../../figures/logisticSel/PBRs.png", width=7.5, height=6, dpi=300)
 
 
 # txt ####
 
 VarPobl<- cbind(years=yrs, BD=BD_est1, BT=BT_est1, R=Rec_est1, F_est=F_est1, "F/FRMS"=F_est1/Frms, "BD/BDRMS"=BD_est1/Brms, "Y/BT"=predD/BT_est1)
-write.table(VarPobl, '../../tables/base/Var_Pobl.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
+write.table(VarPobl, '../../tables/logisticSel/Var_Pobl.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
 
 
 like<- cbind(CPUE=out1$LIKE[1], Crucero=out1$LIKE[2], Desemb=out1$LIKE[3], prop=out1$LIKE[4], 
              prop_mflo=out1$LIKE[5], prop_hflo=out1$LIKE[6], pobs_crum=out1$LIKE[7], pobs_cruh=out1$LIKE[8],
              Ro=out1$LIKE[9], No_m=out1$LIKE[10], No_h=out1$LIKE[11], Lo_m=out1$LIKE[12], Lo_h=out1$LIKE[13], cvage_m=out1$LIKE[14], cvage_h=out1$LIKE[15])
 like
-write.table(like, '../../tables/base/verosimilitud.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
+write.table(like, '../../tables/logisticSel/verosimilitud.txt', append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
 
 
 

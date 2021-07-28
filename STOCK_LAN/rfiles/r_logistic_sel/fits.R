@@ -11,7 +11,7 @@ library(devtools)
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-out1 <- read.admb("../../output/Lam")
+out1 <- read.admb("../../output/logistic_sel/Lam")
 
 names(out1)
 # Para graficar ... ####
@@ -125,7 +125,7 @@ plot <- ggarrange(p1_2, p2, p3,
 
 #ggexport(p_1, filename = "Fig1.jpeg", width=6.5, height=8, dpi=300)
 #ggexport(plot, filename = "Fig1_2.jpeg", width=6.5, height=8, dpi=300)
-ggsave(plot, filename='../../figures/base/Fig1.png', width=6.5, height=8, dpi=300)
+ggsave(plot, filename='../../figures/logisticSel/Fig1.png', width=6.5, height=8, dpi=300)
 
 
 # Composición de tallas Flota ####
@@ -168,7 +168,7 @@ p1 <- p1 + facet_wrap(~ yrs, dir = 'v', scales='free')  + scale_x_discrete('Tall
 p1
 
 #ggexport(p1, filename = "Fig2_TallasM_flo.jpeg")
-ggsave(p1, filename = "../../figures/base/Fig2_TallasM_flo.png")
+ggsave(p1, filename = "../../figures/logisticSel/Fig2_TallasM_flo.png")
 
 
 # Hembras Flota
@@ -209,7 +209,7 @@ p2 <- p2 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tal
 p2
 
 #ggexport(p2, filename = "Fig3_TallasH_flo.jpeg")
-ggsave(p2, filename = "../../figures/base/Fig3_TallasH_flo.png")
+ggsave(p2, filename = "../../figures/logisticSel/Fig3_TallasH_flo.png")
 
 
 # Composición de tallas Crucero ####
@@ -250,7 +250,7 @@ p3 <- p3 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tal
 p3
 
 #ggexport(p3, filename = "Fig4_TallasM_cru.jpeg")
-ggsave(p3, filename = "../../figures/base/Fig4_TallasM_cru.png")
+ggsave(p3, filename = "../../figures/logisticSel/Fig4_TallasM_cru.png")
 
 
 # Hembras Crucero
@@ -289,7 +289,7 @@ p4 <- p4 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tal
 p4
 
 #ggexport(p4, filename = "Fig5_TallasH_cru.jpeg")
-ggsave(p4, filename = "../../figures/base/Fig5_TallasH_cru.png")
+ggsave(p4, filename = "../../figures/logisticSel/Fig5_TallasH_cru.png")
 
 
 # Tallas Medias Flota ####
@@ -332,8 +332,8 @@ plot2 <- ggarrange(p5, p6, ncol = 1, nrow = 2, align = "v", common.legend = TRUE
 #ggexport(plot1, filename = "Fig6_1.jpeg", width=9, height=6, dpi=300)
 #ggexport(plot2, filename = "Fig6_2.jpeg", width=6.5, height=8, dpi=300)
 
-ggsave(plot1, filename = "../../figures/base/Fig6_1.png", width=9, height=6, dpi=300)
-ggsave(plot2, filename = "../../figures/base/Fig6_2.png", width=6.5, height=8, dpi=300)
+ggsave(plot1, filename = "../../figures/logisticSel/Fig6_1.png", width=9, height=6, dpi=300)
+ggsave(plot2, filename = "../../figures/logisticSel/Fig6_2.png", width=6.5, height=8, dpi=300)
 
 
 # Tallas Medias Crucero ####
@@ -377,8 +377,8 @@ plot4 <- ggarrange(p7, p8, ncol = 1, nrow = 2, align = "v", common.legend = TRUE
 # ggexport(plot3, filename = "Fig7_1.jpeg", width=9, height=6, dpi=300)
 # ggexport(plot4, filename = "Fig7_2.jpeg", width=6.5, height=8, dpi=300)
 
-ggsave(plot3, filename = "../../figures/base/Fig7_1.png", width=9, height=6, dpi=300)
-ggsave(plot4, filename = "../../figures/base/Fig7_2.png", width=6.5, height=8, dpi=300)
+ggsave(plot3, filename = "../../figures/logisticSel/Fig7_1.png", width=9, height=6, dpi=300)
+ggsave(plot4, filename = "../../figures/logisticSel/Fig7_2.png", width=6.5, height=8, dpi=300)
 
 
 # Selectividad ####
@@ -416,8 +416,8 @@ p10
 
 psel <- ggarrange(p9, p10, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
 #ggexport(psel, filename = "Fig8.jpeg")
-ggsave(psel, filename = "../../figures/base/Fig8.png")
+ggsave(psel, filename = "../../figures/logisticSel/Fig8.png")
 
 psel2 <- ggarrange(p9, p10, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
 #ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
-ggsave(psel2, filename = "../../figures/base/Fig8_2.png", width=7, height=8, dpi=300)
+ggsave(psel2, filename = "../../figures/logisticSel/Fig8_2.png", width=7, height=8, dpi=300)

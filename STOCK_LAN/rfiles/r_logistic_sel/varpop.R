@@ -1,3 +1,4 @@
+rm(list=ls())
 # Funciones y Directorios ####
 library(rstudioapi)
 library(ggplot2)
@@ -12,8 +13,8 @@ setwd(dirname(current_path ))
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
 
-out1 <- read.admb("../../output/Lam")
-std1 <- read.table('../../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+out1 <- read.admb("../../output/logistic_sel/Lam")
+std1 <- read.table('../../output/logistic_sel/Lam.std', header = T, sep = '', na='NA', fill = T)
 
 # Para graficar ... ####
  yrs <- out1$YRS
@@ -124,7 +125,7 @@ p9
 
 plot_rec <- ggarrange(p8, p9, ncol = 1, nrow = 2, align = "v", common.legend = F, legend = "none")
 #ggexport(plot_rec, filename = "VarPop1_Rec.pdf", width=8, height=6.5, dpi=300)
-ggsave(plot_rec, filename = "../../figures/base/VarPop1_Rec.png", width=7, height=8, dpi=300)
+ggsave(plot_rec, filename = "../../figures/logisticSel/VarPop1_Rec.png", width=7, height=8, dpi=300)
 
 
 # Biomasa Total ####
@@ -177,14 +178,14 @@ p11
 
 plot_B <- ggarrange(p10, p11, ncol = 1, nrow = 2, align = "v", common.legend = F, legend = "none")
 #ggexport(plot_B, filename = "VarPop2_Biom.pdf", width=8, height=6.5, dpi=300)
-ggsave(plot_B, filename = "../../figures/base/VarPop2_Biom.png", width=8, height=6.5, dpi=300)
+ggsave(plot_B, filename = "../../figures/logisticSel/VarPop2_Biom.png", width=8, height=6.5, dpi=300)
 
 # Mortalidad por Pesca ####
 
 p12 <- ggplot(data = NULL, aes(x = yrs)) + 
   geom_line(aes(y = F_est1, colour = 'actual', linetype = 'actual')) +
   #geom_line(aes(y = c(F_est2,NA), colour = 'anterior', linetype = 'anterior')) +
-  geom_ribbon(data=NULL, aes(ymin=F1_lwr, ymax=F1_upr), fill = 'grey60', alpha = 0.4) + 
+  #geom_ribbon(data=NULL, aes(ymin=F1_lwr, ymax=F1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(F2_lwr,NA), ymax=c(F2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
   geom_line(aes(y = c(rep(M,42)), colour = 'M', linetype = 'M')) +
   geom_line(aes(y = c(rep(Frms,42)), colour = 'Frms', linetype = 'Frms')) +
@@ -206,7 +207,7 @@ p12 <- p12 + theme_bw() +
 
 p12
 #ggexport(p12, filename = "VarPop3_Fh.pdf", width=8, height=6.5, dpi=300)
-ggsave(p12, filename = "../../figures/base/VarPop3_Fh.png", width=8, height=6.5, dpi=300)
+ggsave(p12, filename = "../../figures/logisticSel/VarPop3_Fh.png", width=8, height=6.5, dpi=300)
 
 
 
