@@ -1,3 +1,4 @@
+rm(list=ls())
 # Funciones y Directorios ####
 library(rstudioapi)
 library(ggplot2)
@@ -11,7 +12,7 @@ library(devtools)
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-out1 <- read.admb("../../output/Lam")
+out1 <- read.admb("../../output/base/Lam")
 
 names(out1)
 # Para graficar ... ####

@@ -12,8 +12,8 @@ setwd(dirname(current_path ))
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-out1 <- read.admb("../../output/Lam")
-std1 <- read.table('../../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+out1 <- read.admb("../../output/base/Lam")
+std1 <- read.table('../../output/base/Lam.std', header = T, sep = '', na='NA', fill = T)
 
 
 # # Para graficar ... ####
@@ -179,15 +179,15 @@ source('~/Documents/Rwork/Functions/Funciones/Fn_DiagramaFase.R')
 DiagramaFase(estatus,years1,SpB1,SpBSE1,ln_Fyr1,ln_FSE1,FRMS1,BRMS1,BLIM1,FLIM1,color=F,dir.1,etiqueta=F)
 
 
-Bo2           <- rep2$BDoLP              # Paso 4: Obtenci?n de Bo
-BRMS2         <- Bo2*0.4                        # Paso 5: Obtenci?n de Brms = 60%SPRo = 55%Bo
-FRMS2         <- 0.26
-BLIM2         <- Bo2*0.275                        # Paso 6: Obtenci?n de Blim = 20%Bo 
-FLIM2         <- 1.27                             # Paso 6: Obtenci?n de Flim = 30%SPRo
-SpB2          <- SSBt2                            # BD serie hist?rica de evaluaci?n de stock 
-SpBSE2        <- SSBt2std                         # desviaci?n estandar BD
-ln_Fyr2       <- Ft2                              # logaritmo de Ft
-ln_FSE2       <- Ft2std                           # logaritmo de la desviaci?n standar de Ft
+# Bo2           <- rep2$BDoLP              # Paso 4: Obtenci?n de Bo
+# BRMS2         <- Bo2*0.4                        # Paso 5: Obtenci?n de Brms = 60%SPRo = 55%Bo
+# FRMS2         <- 0.26
+# BLIM2         <- Bo2*0.275                        # Paso 6: Obtenci?n de Blim = 20%Bo 
+# FLIM2         <- 1.27                             # Paso 6: Obtenci?n de Flim = 30%SPRo
+# SpB2          <- SSBt2                            # BD serie hist?rica de evaluaci?n de stock 
+# SpBSE2        <- SSBt2std                         # desviaci?n estandar BD
+# ln_Fyr2       <- Ft2                              # logaritmo de Ft
+# ln_FSE2       <- Ft2std                           # logaritmo de la desviaci?n standar de Ft
 
 # Buscar fases anterior en proyecto anterior
 

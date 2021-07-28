@@ -12,8 +12,8 @@ setwd(dirname(current_path ))
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
 
-out1 <- read.admb("../../output/Lam")
-std1 <- read.table('../../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+out1 <- read.admb("../../output/base/Lam")
+std1 <- read.table('../../output/base/Lam.std', header = T, sep = '', na='NA', fill = T)
 
 # Para graficar ... ####
  yrs <- out1$YRS
