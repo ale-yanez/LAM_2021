@@ -23,7 +23,7 @@ DATA_SECTION
  init_matrix data(1,nyears,1,13);
   //Years/desem/cpue/Bcru/ph/cv_desem/cv_CPUE/cv_Cru/cv_ph/n_mf/n_hf/n_mc/n_hc
  init_vector vec_ages(1,nedades);
- init_vector vec_tallas(1,ntallas);
+ init_vector vec_tallas(1,ntallas); 
 
  init_3darray Catsize(1,4,1,nyears,1,ntallas);
 
