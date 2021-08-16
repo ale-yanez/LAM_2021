@@ -13,8 +13,8 @@ setwd(dirname(current_path ))
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
 
-out1 <- read.admb("../../output/Lam")
-std1 <- read.table('../../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+out1 <- read.admb("../../output/base/Lam")
+std1 <- read.table('../../output/base/Lam.std', header = T, sep = '', na='NA', fill = T)
 
 
 # Para graficar ... ####
@@ -211,31 +211,4 @@ p12 <- p12 + theme_bw() +
 p12
 #ggexport(p12, filename = "VarPop3_Fh.pdf", width=8, height=6.5, dpi=300)
 ggsave(p12, filename = "../../figures/base/VarPop3_Fh.png", width=8, height=6.5, dpi=300)
-
-
-# Mortalidad por Pesca b ####
-
-p12_b <- ggplot(data = NULL, aes(x = yrs)) + 
-  geom_line(aes(y = F_est1_b, colour = 'actual', linetype = 'actual')) +
-  geom_line(aes(y = c(F_est2_b,NA), colour = 'anterior', linetype = 'anterior')) +
-  geom_ribbon(data=NULL, aes(ymin=F1_lwr_b, ymax=F1_upr_b), fill = 'grey60', alpha = 0.4) + 
-  geom_ribbon(data=NULL, aes(ymin=c(F2_lwr_b,NA), ymax=c(F2_upr_b,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(M,36)), colour = 'M', linetype = 'M')) +
-  geom_line(aes(y = c(rep(Frms,36)), colour = 'Frms', linetype = 'Frms')) +
-  
-  scale_color_manual(name = '',
-                     values = c('royalblue3', 'red1', 'chartreuse3','black'),
-                     limits = c('actual', 'anterior', 'M', 'Frms'),
-                     breaks = c('actual', 'anterior', 'M', 'Frms')) +
-  scale_linetype_manual(name = '',
-                        values = c('solid', 'longdash', 'twodash','dotted'),
-                        limits = c('actual', 'anterior', 'M', 'Frms'),
-                        breaks = c('actual', 'anterior', 'M', 'Frms'))
-p12_b <- p12_b + theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
-  theme(legend.position = 'bottom') + ylab('Mortalidad por Pesca (1/años)') + xlab('Años') + 
-  scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1))
-
-p12_b
-ggexport(p12_b, filename = "VarPop3_Ftot.pdf", width=8, height=6.5, dpi=300)
 
