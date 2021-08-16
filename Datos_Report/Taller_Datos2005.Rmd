@@ -58,7 +58,7 @@ En términos de la información presentada en la **Figura 1**, es posible notar 
 # dat.file_nor    = "lamnor2003.dat" #Cambiar despues por info actualizada y borrar esto
 # dat1_nor        <- lisread(paste(dir.2,dat.file_nor, sep='/'));
 
-dat1_nor        <- lisread("../STOCK_LAN/input/stock_LAN.dat");
+dat1_nor        <- lisread("../STOCK_LAN/input/base/stock_LAN.dat");
 names(dat1_nor) <- str_trim(names(dat1_nor), side="right")
 dat_nor         <- dat1_nor
 
@@ -275,7 +275,7 @@ p4 <-  ggplot(myd_nor, aes(x=yrs_n))+
   scale_colour_manual(name='', values=c('CPUE Obs'='black'), guide='legend') +
   guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
   
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs_n), 2019, by = 3),1)) +
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs_n)-1, 2020, by = 2),1)) +
   ylab('Indice Relativo') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
@@ -312,7 +312,7 @@ p5 <-  ggplot(myd_nor, aes(x=yrs_n))+
 
 p5
 
-#ggsave(p5, file='Figs/Fig3_Crucero_LAmNor.png', width=7.5, height=5, dpi=300)
+ggsave(p5, file='Figs/Fig3_Crucero_LAmNor.png', width=7.5, height=5, dpi=300)
 
 ```
 **Figura 5.** Biomasa de crucero observada en la pesquería de Langostino Amarillo, ZEN.  
@@ -328,8 +328,11 @@ En la tabla x se presentan los cvs utilizados los cuales son iguales para ambas 
 
 
 ```{r echo=FALSE, warning = FALSE, message = FALSE, eval= T}
+prop_fix <- c(c(rep(0.5,14),myd_nor$ph[15:42]))
 
-df_prop <- data.frame(c(rep(yrs_n,2)), c(myd_nor$ph, (1-myd_nor$ph)), c(rep('hembras',42), rep(' machos',42)))
+#df_prop <- data.frame(c(rep(yrs_s,2)), c(myd_sur$ph, (1-myd_sur$ph)), c(rep('hembras',42), rep(' machos',42)))
+
+df_prop <- data.frame(c(rep(yrs_n,2)), c(prop_fix, (1-prop_fix)), c(rep('hembras',42), rep(' machos',42)))
 names <-  c('yrs', 'Prop', 'Sexo')
 colnames(df_prop) <- names
 
@@ -345,7 +348,7 @@ p6 <- ggplot(df_prop, aes(fill=Sexo, y=Prop, x=yrs)) +
 
 p6 + annotate("segment", x=1979, xend=2020, y=0.5, yend=0.5, colour="red", linetype="dashed")
 
-#ggsave(p6, file='Figs/Fig4_PropSexual_LAmNor.png', width=7.5, height=5, dpi=300)
+ggsave(p6, file='Figs/Fig4_PropSexual_LAmNor.png', width=7.5, height=5, dpi=300)
 
 ```
 **Figura 6.** Proporción sexual en las capturas de langostino amarillo, ZEN.  
@@ -387,7 +390,7 @@ df1 <- data.frame(dat_nor$ETflom)
   p7 <- p7 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
   p7
 
-  #ggsave(p7, file='Figs/Fig5_CompsFleetM_LAmNor.png', width=7.5, height=5, dpi=300)
+  ggsave(p7, file='Figs/Fig5_CompsFleetM_LAmNor.png', width=7.5, height=5, dpi=300)
   
 ```
 **Figura 7.** Composición de tallas de machos en las capturas de langostino amarillo, ZEN
@@ -430,7 +433,7 @@ df2 <- data.frame(dat_nor$ETfloh)
   p8
 
 
-  #ggsave(p8, file='Figs/Fig6_CompsFleetH_LAmNor.png', width=7.5, height=5, dpi=300)
+  ggsave(p8, file='Figs/Fig6_CompsFleetH_LAmNor.png', width=7.5, height=5, dpi=300)
   
   
 ```
@@ -470,7 +473,7 @@ df3 <- data.frame(dat_nor$ETcrum)
   p9 <- p9 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
   p9
 
-#  ggsave(p9, file='Figs/Fig7_CompsSurvM_LAmNor.png', width=7.5, height=5, dpi=300)
+  ggsave(p9, file='Figs/Fig7_CompsSurvM_LAmNor.png', width=7.5, height=5, dpi=300)
   
   
 ```
@@ -509,7 +512,7 @@ df4 <- data.frame(dat_nor$ETcruh)
   p10 <- p10 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
   p10
   
-  #ggsave(p10, file='Figs/Fig8_CompsSurvH_LAmNor.png', width=7.5, height=5, dpi=300)
+  ggsave(p10, file='Figs/Fig8_CompsSurvH_LAmNor.png', width=7.5, height=5, dpi=300)
   
 
 ```
@@ -551,7 +554,7 @@ p11 <- p11 + theme_bw() +
 
 p11
 
-#ggsave(p11, file='Figs/Fig9_Wm_LAmNor.png', width=7.5, height=5, dpi=300)
+ggsave(p11, file='Figs/Fig9_Wm_LAmNor.png', width=7.5, height=5, dpi=300)
 
 ```
 **Figura 11.** Pesos medios de machos y hembras utilizados en el modelo de evaluación de stock de langostino amarillo, ZEN.
@@ -636,14 +639,14 @@ p13 <-  ggplot(myd_sur, aes(x=yrs_s))+
   scale_colour_manual(name='', values=c('CPUE Obs'='black'), guide='legend') +
   guides(colour = guide_legend(override.aes = list(linetype=c(0), shape=c(21)))) +
   
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs_s), 2019, by = 2),1)) +
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs_s)-1, 2020, by = 2),1)) +
   ylab('Indice Relativo') + scale_y_continuous(breaks=round(seq(0, 3, by = 0.5),1)) + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
 
 p13
 
-#ggsave(p13, file='Figs/Fig11_CPUE_LAmSur.png', width=7.5, height=5, dpi=300)
+ggsave(p13, file='Figs/Fig11_CPUE_LAmSur.png', width=7.5, height=5, dpi=300)
 
 ```
 **Figura 13.** Composición de tallas de machos en las capturas de langostino amarillo, ZEN
@@ -678,8 +681,10 @@ p14
 
 
 ```{r echo=FALSE, warning = FALSE, message = FALSE, eval= T}
+prop_fixSur <- c(c(rep(0.5,18),myd_sur$ph[19:22],c(rep(0.5,5))), myd_sur$ph[28:42])
 
-df_prop <- data.frame(c(rep(yrs_s,2)), c(myd_sur$ph, (1-myd_sur$ph)), c(rep('hembras',42), rep(' machos',42)))
+df_prop <- data.frame(c(rep(yrs_s,2)), c(prop_fixSur, (1-prop_fixSur)), c(rep('hembras',42), rep(' machos',42)))
+#df_prop <- data.frame(c(rep(yrs_s,2)), c(myd_sur$ph, (1-myd_sur$ph)), c(rep('hembras',42), rep(' machos',42)))
 names <-  c('yrs', 'Prop', 'Sexo')
 colnames(df_prop) <- names
 
@@ -687,15 +692,15 @@ p15 <- ggplot(df_prop, aes(fill=Sexo, y=Prop, x=yrs)) +
   geom_bar(stat="identity", position = "fill") +
   scale_fill_manual("", values = c("hembras" = "gold2", " machos" = "grey")) +
   
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs_s), 2019, by = 2),1)) +
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs_s)-1, 2020, by = 2),1)) +
   ylab('Proporción') + scale_y_continuous(breaks=round(seq(0, 1, by = 0.1),1)) + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'bottom')  + theme(legend.title=element_blank())
 
 
-p15 + annotate("segment", x=1985, xend=2019, y=0.5, yend=0.5, colour="red", linetype="dashed")
+p15 + annotate("segment", x=1978, xend=2021, y=0.5, yend=0.5, colour="red", linetype="dashed")
 
-#ggsave(p15, file='Figs/Fig13_PropSexual_LAmSur.png', width=7.5, height=5, dpi=300)
+ggsave(p15, file='Figs/Fig13_PropSexual_LAmSur.png', width=7.5, height=5, dpi=300)
 ```
 **Figura 15.** Composición de tallas de machos en las capturas de langostino amarillo, ZEN
 
@@ -709,8 +714,8 @@ df5 <- data.frame(dat_sur$ETflom)
 names <-  c(tallas_s)
 colnames(df5) <- names
 df5$yr <- as.factor(yrs_s)
-df5 <- df5[-c(1:2, 4:7, 9:15, 22:24), ]
-
+df5 <- df5[-c(1:18, 23:26), ]
+# df6 <- df6[-c(1:18, 23:26), ]
 #length(df1[, 34])
 
 d5 <- melt(df5)
@@ -731,7 +736,7 @@ p16 <- ggplot(data=dfl5, aes(x=Tallas, y=pobs)) +
 p16 <- p16 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
 p16
 
-#ggsave(p16, file='Figs/Fig14_CompsFleetM_LAmSur.png', width=7.5, height=5, dpi=300)
+ggsave(p16, file='Figs/Fig14_CompsFleetM_LAmSur.png', width=7.5, height=5, dpi=300)
 ```
 **Figura 16.** Composición de tallas de machos en las capturas de langostino amarillo, ZEN
 
@@ -747,7 +752,7 @@ df6 <- data.frame(dat_sur$ETfloh)
 names <-  c(tallas_s)
 colnames(df6) <- names
 df6$yr <- as.factor(yrs_s)
-df6 <- df6[-c(1:2, 4:7, 9:15, 22:24), ]
+df6 <- df6[-c(1:18, 23:26), ]
 
 #length(df1[, 34])
 
@@ -769,7 +774,7 @@ p17 <- ggplot(data=dfl6, aes(x=Tallas, y=pobs)) +
 p17 <- p17 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
 p17
 
-#ggsave(p17, file='Figs/Fig15_CompsFleetH_LAmSur.png', width=7.5, height=5, dpi=300)
+ggsave(p17, file='Figs/Fig15_CompsFleetH_LAmSur.png', width=7.5, height=5, dpi=300)
 ```
 **Figura 17.** Composición de tallas de machos en las capturas de langostino amarillo, ZEN
 
@@ -782,7 +787,7 @@ df7 <- data.frame(dat_sur$ETcrum)
 names <-  c(tallas_s)
 colnames(df7) <- names
 df7$yr <- as.factor(yrs_s)
-df7 <- df7[-c(1:20, 32), ]
+df7 <- df7[-c(1:21), ]
 
 #length(df1[, 34])
 
@@ -804,7 +809,7 @@ p18 <- ggplot(data=dfl7, aes(x=Tallas, y=pobs)) +
 p18 <- p18 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
 p18
 
-#ggsave(p18, file='Figs/Fig16_CompsSurvM_LAmSur.png', width=7.5, height=5, dpi=300)
+ggsave(p18, file='Figs/Fig16_CompsSurvM_LAmSur.png', width=7.5, height=5, dpi=300)
 ```
 **Figura 18.** Composición de tallas de machos provenientes de los cruceros de evaluación directa de langostino amarillo, ZEN
 
@@ -820,8 +825,8 @@ df8 <- data.frame(dat_sur$ETcruh)
 names <-  c(tallas_s)
 colnames(df8) <- names
 df8$yr <- as.factor(yrs_s)
-df8 <- df8[-c(1:20, 32), ]
-
+df8 <- df8[-c(1:21), ]
+#df7 <- df7[-c(1:21), ]
 #length(df1[, 34])
 
 d8 <- melt(df8)
@@ -842,7 +847,7 @@ p19 <- ggplot(data=dfl8, aes(x=Tallas, y=pobs)) +
 p19 <- p19 + facet_wrap(~ yrs, dir = 'v') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6))# + scale_y_continuous(limits=c(0,0.16))
 p19
 
-#ggsave(p19, file='Figs/Fig17_CompsSurvH_LAmSur.png', width=7.5, height=5, dpi=300)
+ggsave(p19, file='Figs/Fig17_CompsSurvH_LAmSur.png', width=7.5, height=5, dpi=300)
 
 ```
 **Figura 19.** Composición de tallas de machos en las capturas de langostino amarillo, ZEN

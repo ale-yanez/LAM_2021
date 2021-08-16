@@ -203,8 +203,8 @@ PARAMETER_SECTION
  init_bounded_dev_vector log_dev_Ro(1,nyears,-10,10,phs_devRt); //dev_vector para que la suma de los parámetros al ser estimados sea 0
  init_bounded_vector log_dev_Nom(1,nedades,-10,10,phs_devNo); // -10, 10 significa...
  init_bounded_vector log_dev_Noh(1,nedades,-10,10,phs_devNo);
- init_bounded_vector log_Fm(1,nyears,-10,10,phs_F); // // log  mortalidad por pesca por flota machos F LIMITADA EN 0.8187 !!!!!!
- init_bounded_vector log_Fh(1,nyears,-10,10,phs_F); // log  mortalidad por pesca por flota
+ init_bounded_vector log_Fm(1,nyears,-10,3,phs_F); // // log  mortalidad por pesca por flota machos F LIMITADA EN 0.8187 !!!!!!
+ init_bounded_vector log_Fh(1,nyears,-10,3,phs_F); // log  mortalidad por pesca por flota
 
 // capturabilidades
  init_vector log_qflo(1,nbloq_qflo,phs_qflo);
