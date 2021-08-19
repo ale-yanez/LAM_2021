@@ -12,7 +12,7 @@ setwd(dirname(current_path ))
 
 devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.admb.R?raw=TRUE")
 
-out1 <- read.admb("../../output/Lam")
+out1 <- read.admb("../../output/base/Lam")
 
 # Para graficar ... ####
  yrs <- out1$YRS
@@ -126,6 +126,130 @@ plot <- ggarrange(p1_2, p2, p3,
 # ggexport(p_1, filename = "Fig1.jpeg", width=6.5, height=8, dpi=300)
 # ggexport(plot, filename = "Fig1_2.jpeg", width=6.5, height=8, dpi=300)
 ggsave(plot, filename='../../figures/base/Fig1.png', width=6.5, height=8, dpi=300)
+
+
+# Tallas Medias Flota ####
+
+#Machos
+df_flo<-data.frame(cbind(yrs, Lobs_mf, Lpred_mf, Lobs_hf, Lpred_hf))
+colnames(df_flo) <- c('yrs', 'Lobs_mf', 'Lest_m', 'Lobs_hf', 'Lest_h')
+
+p5 <-  ggplot(df_flo, aes(x=yrs)) +
+  geom_point(aes(y= Lobs_mf, colour="Talla Media Obs."), size = 2, shape = 21) +
+  geom_line(aes(y= Lest_m, colour="Talla Media Est.")) +
+  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
+  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
+
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
+  ylab('LC machos (mm)') + ylim(24, 40) + 
+  #scale_y_continuous(breaks=round(seq(24, 40, by = 4),1)) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
+  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
+
+p5
+
+# Hembras
+p6 <-  ggplot(df_flo, aes(x=yrs)) +
+  geom_point(aes(y= Lobs_hf, colour="Talla Media Obs."), size = 2, shape = 21) +
+  geom_line(aes(y= Lest_h, colour="Talla Media Est.")) +
+  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
+  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
+  
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) + 
+  ylab('LC hembras (mm)') + ylim(24, 40) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
+  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
+
+p6
+
+plot1 <- ggarrange(p5, p6, ncol = 2, nrow = 1, align = "h", common.legend = TRUE, legend = "bottom")
+plot2 <- ggarrange(p5, p6, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
+
+ggsave(plot1, filename = "../../figures/base/Fig6_1.png", width=9, height=6, dpi=300)
+ggsave(plot2, filename = "../../figures/base/Fig6_2.png", width=6.5, height=8, dpi=300)
+
+
+# Tallas Medias Crucero ####
+
+#Machos crucero
+
+df_cru<-data.frame(cbind(yrs, Lobs_mc, Lpred_mc, Lobs_hc, Lpred_hc))
+colnames(df_cru) <- c('yrs', 'Lobs_mc', 'Lest_m', 'Lobs_hc', 'Lest_h')
+
+p7 <-  ggplot(df_cru, aes(x=yrs)) +
+  geom_point(aes(y= Lobs_mc, colour="Talla Media Obs."), size = 2, shape = 21)+
+  geom_line(aes(y= Lest_m, colour="Talla Media Est."))+
+  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
+  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
+  
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
+  ylab('LC machos (mm)') + ylim(24, 40) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
+  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
+
+p7
+
+#Hembras crucero
+
+p8 <-  ggplot(df_cru, aes(x=yrs)) +
+  geom_point(aes(y= Lobs_hc, colour="Talla Media Obs."), size = 2, shape = 21) +
+  geom_line(aes(y= Lest_h, colour="Talla Media Est.")) +
+  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
+  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
+  
+  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
+  ylab('LC hembras (mm)') + ylim(24,40) + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
+  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
+
+p8
+
+plot3 <- ggarrange(p7, p8, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
+plot4 <- ggarrange(p7, p8, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
+
+ggsave(plot3, filename = "../../figures/base/Fig7_1.png", width=9, height=6, dpi=300)
+ggsave(plot4, filename = "../../figures/base/Fig7_2.png", width=6.5, height=8, dpi=300)
+
+
+# Selectividad ####
+
+df_Sel <- data.frame(c(1:11), out1$Sflom_age[1,], out1$Sfloh_age[1,], out1$Scrum_age[1,], out1$Scruh_age[1,])
+colnames(df_Sel) <- c('ages', 'S_flom','S_floh', 'S_crum', 'S_cruh')
+
+#Plotting Flota
+
+p9 <- ggplot(df_Sel, aes(x = ages)) + 
+  geom_line(aes(y = S_flom, colour = 'Machos', linetype = 'Machos')) +
+  geom_line(aes(y = S_floh, colour = 'Hembras', linetype = 'Hembras')) +
+  scale_color_manual(name = '', values = c('black', 'black')) +     
+  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
+
+p9 <- p9 + theme_bw() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
+  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
+  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Flota')
+
+p9
+
+p10 <- ggplot(df_Sel, aes(x = ages)) + 
+  geom_line(aes(y = S_crum, colour = 'Machos', linetype = 'Machos')) +
+  geom_line(aes(y = S_cruh, colour = 'Hembras', linetype = 'Hembras')) +
+  scale_color_manual(name = '', values = c('black', 'black')) + 
+  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
+
+p10 <- p10 + theme_bw() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
+  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Crucero')
+
+p10
+
+psel <- ggarrange(p9, p10, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
+ggsave(psel, filename = "../../figures/base/Fig8.png")
+
+psel2 <- ggarrange(p9, p10, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
+#ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
+ggsave(psel2, filename = "../../figures/base/Fig8_2.png", width=7, height=8, dpi=300)
 
 # Composición de tallas Flota ####
 
@@ -283,125 +407,4 @@ p4
 
 ggsave(p4, filename = "../../figures/base/Fig5_TallasH_cru.png")
 
-# Tallas Medias Flota ####
 
-#Machos
-df_flo<-data.frame(cbind(yrs, Lobs_mf, Lpred_mf, Lobs_hf, Lpred_hf))
-colnames(df_flo) <- c('yrs', 'Lobs_mf', 'Lest_m', 'Lobs_hf', 'Lest_h')
-
-p5 <-  ggplot(df_flo, aes(x=yrs)) +
-  geom_point(aes(y= Lobs_mf, colour="Talla Media Obs."), size = 2, shape = 21) +
-  geom_line(aes(y= Lest_m, colour="Talla Media Est.")) +
-  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
-  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
-
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
-  ylab('LC machos (mm)') + ylim(24, 40) + 
-  #scale_y_continuous(breaks=round(seq(24, 40, by = 4),1)) +
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
-  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
-
-p5
-
-# Hembras
-p6 <-  ggplot(df_flo, aes(x=yrs)) +
-  geom_point(aes(y= Lobs_hf, colour="Talla Media Obs."), size = 2, shape = 21) +
-  geom_line(aes(y= Lest_h, colour="Talla Media Est.")) +
-  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
-  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
-  
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) + 
-  ylab('LC hembras (mm)') + ylim(24, 40) +
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
-  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
-
-p6
-
-plot1 <- ggarrange(p5, p6, ncol = 2, nrow = 1, align = "h", common.legend = TRUE, legend = "bottom")
-plot2 <- ggarrange(p5, p6, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
-
-ggsave(plot1, filename = "../../figures/base/Fig6_1.png", width=9, height=6, dpi=300)
-ggsave(plot2, filename = "../../figures/base/Fig6_2.png", width=6.5, height=8, dpi=300)
-
-
-# Tallas Medias Crucero ####
-
-#Machos crucero
-
-df_cru<-data.frame(cbind(yrs, Lobs_mc, Lpred_mc, Lobs_hc, Lpred_hc))
-colnames(df_cru) <- c('yrs', 'Lobs_mc', 'Lest_m', 'Lobs_hc', 'Lest_h')
-
-p7 <-  ggplot(df_cru, aes(x=yrs)) +
-  geom_point(aes(y= Lobs_mc, colour="Talla Media Obs."), size = 2, shape = 21)+
-  geom_line(aes(y= Lest_m, colour="Talla Media Est."))+
-  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
-  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
-  
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
-  ylab('LC machos (mm)') + ylim(24, 40) +
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
-  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
-
-p7
-
-#Hembras crucero
-
-p8 <-  ggplot(df_cru, aes(x=yrs)) +
-  geom_point(aes(y= Lobs_hc, colour="Talla Media Obs."), size = 2, shape = 21) +
-  geom_line(aes(y= Lest_h, colour="Talla Media Est.")) +
-  scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
-  guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
-  
-  xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
-  ylab('LC hembras (mm)') + ylim(24,40) + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
-  theme(legend.position = 'bottom')  + theme(legend.title=element_blank()) + theme(legend.text = element_text(size = 10))
-
-p8
-
-plot3 <- ggarrange(p7, p8, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
-plot4 <- ggarrange(p7, p8, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
-
-ggsave(plot3, filename = "../../figures/base/Fig7_1.png", width=9, height=6, dpi=300)
-ggsave(plot4, filename = "../../figures/base/Fig7_2.png", width=6.5, height=8, dpi=300)
-
-
-# Selectividad ####
-
-df_Sel <- data.frame(c(1:11), out1$Sflom_age[1,], out1$Sfloh_age[1,], out1$Scrum_age[1,], out1$Scruh_age[1,])
-colnames(df_Sel) <- c('ages', 'S_flom','S_floh', 'S_crum', 'S_cruh')
-
-#Plotting Flota
-
-p9 <- ggplot(df_Sel, aes(x = ages)) + 
-  geom_line(aes(y = S_flom, colour = 'Machos', linetype = 'Machos')) +
-  geom_line(aes(y = S_floh, colour = 'Hembras', linetype = 'Hembras')) +
-  scale_color_manual(name = '', values = c('black', 'black')) +     
-  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
-
-p9 <- p9 + theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
-  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
-  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Flota')
-
-p9
-
-p10 <- ggplot(df_Sel, aes(x = ages)) + 
-  geom_line(aes(y = S_crum, colour = 'Machos', linetype = 'Machos')) +
-  geom_line(aes(y = S_cruh, colour = 'Hembras', linetype = 'Hembras')) +
-  scale_color_manual(name = '', values = c('black', 'black')) + 
-  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
-
-p10 <- p10 + theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
-  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
-  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Crucero')
-
-p10
-
-psel <- ggarrange(p9, p10, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
-ggsave(psel, filename = "../../figures/base/Fig8.png")
-
-psel2 <- ggarrange(p9, p10, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
-#ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
-ggsave(psel2, filename = "../../figures/base/Fig8_2.png", width=7, height=8, dpi=300)
