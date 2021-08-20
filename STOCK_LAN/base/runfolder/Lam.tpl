@@ -61,10 +61,10 @@ DATA_SECTION
   !! log_qcru_prior = log(qcru);
 
 
- init_matrix sel_ini(1,4,1,3);//Selectividad flota y crucero (valores de partida y rango)
+ init_matrix sel_ini(1,4,1,2);//Selectividad flota y crucero (valores de partida y rango)
 
 
- // Priors para selectividades y sd // Desde aquí hacia abajo difiere de LAm
+ // Priors para selectividades y sd
  //Flota
  number log_L50fpriorm
  !! log_L50fpriorm = log(sel_ini(1,1));
@@ -72,8 +72,6 @@ DATA_SECTION
  number log_s1priorm
  !! log_s1priorm = log(sel_ini(1,2));
 
- number log_s2priorm
- !! log_s2priorm = log(sel_ini(1,3));
 
  number log_L50fpriorh
  !! log_L50fpriorh = log(sel_ini(2,1));
@@ -81,9 +79,7 @@ DATA_SECTION
  number log_s1priorh
  !! log_s1priorh = log(sel_ini(2,2));
  
- number log_s2priorh
- !! log_s2priorh = log(sel_ini(2,3));
-
+ 
 //Crucero
 number log_L50cpriorm
 !! log_L50cpriorm = log(sel_ini(3,1));
@@ -91,8 +87,6 @@ number log_L50cpriorm
 number log_s1priorcm
 !! log_s1priorcm = log(sel_ini(3,2));
 
-number log_s2priorcm
-!! log_s2priorcm = log(sel_ini(3,3));
 
  number log_L50cpriorh
  !! log_L50cpriorh = log(sel_ini(4,1));
@@ -100,11 +94,7 @@ number log_s2priorcm
  number log_s1priorch
  !! log_s1priorch = log(sel_ini(4,2));
  
- number log_s2priorch
- !! log_s2priorch = log(sel_ini(4,3));
 
-
- init_number lambda
 
 
  init_int    nbloq_selflo
@@ -163,20 +153,19 @@ INITIALIZATION_SECTION
   log_L50floh        log_L50fpriorh 
     
   log_sdL50flomL     log_s1priorm 
-  log_sdL50flomR     log_s2priorm 
+
 
   log_sdL50flohL     log_s1priorh 
-  log_sdL50flohR     log_s2priorh 
 
 
   log_L50crum        log_L50cpriorm 
   log_L50cruh        log_L50cpriorh 
   
   log_sdL50crumL     log_s1priorcm 
-  log_sdL50crumR     log_s2priorcm 
+  
 
   log_sdL50cruhL     log_s1priorch 
-  log_sdL50cruhR     log_s2priorch 
+
 
 
   log_Mm           log_M_priorm
@@ -193,19 +182,19 @@ PARAMETER_SECTION
 
  init_vector log_L50flom(1,nbloq_selflo,phs_Selflo);// Podría ser bounded (0.67,1.94)
  init_vector log_sdL50flomL(1,nbloq_selflo,phs_Selflo);
- init_vector log_sdL50flomR(1,nbloq_selflo,phs_Selflo);
+
 
  init_vector log_L50floh(1,nbloq_selflo,phs_Selflo);// Podría ser bounded (0.67,1.94)
  init_vector log_sdL50flohL(1,nbloq_selflo,phs_Selflo);
- init_vector log_sdL50flohR(1,nbloq_selflo,phs_Selflo);
+ 
 
  init_vector log_L50cruh(1,nbloq_selcru,phs_Selcru);// Podría ser bounded (0.67,1.94)
  init_vector log_sdL50cruhL(1,nbloq_selcru,phs_Selcru);
- init_vector log_sdL50cruhR(1,nbloq_selcru,phs_Selcru);
+ 
 
  init_vector log_L50crum(1,nbloq_selcru,phs_Selcru);// Podría ser bounded (0.67,1.94)
  init_vector log_sdL50crumL(1,nbloq_selcru,phs_Selcru);
- init_vector log_sdL50crumR(1,nbloq_selcru,phs_Selcru);
+ 
 
 
 // parametros reclutamientos, desvíos R, No y mortalidades)
@@ -214,10 +203,8 @@ PARAMETER_SECTION
  init_bounded_dev_vector log_dev_Ro(1,nyears,-10,10,phs_devRt); //dev_vector para que la suma de los parámetros al ser estimados sea 0
  init_bounded_vector log_dev_Nom(1,nedades,-10,10,phs_devNo); // -10, 10 significa...
  init_bounded_vector log_dev_Noh(1,nedades,-10,10,phs_devNo);
- //init_bounded_vector log_Fm(1,nyears,-20,-0.2,phs_F); // // log  mortalidad por pesca por flota machos F LIMITADA EN 0.8187 !!!!!!
- //init_bounded_vector log_Fh(1,nyears,-20,-0.2,phs_F); // log  mortalidad por pesca por flota
- init_bounded_vector log_Fm(1,nyears,-10,2,phs_F); // // log  mortalidad por pesca por flota machos F LIMITADA EN 0.8187 !!!!!!
- init_bounded_vector log_Fh(1,nyears,-10,2,phs_F); // log  mortalidad por pesca por flota
+ init_bounded_vector log_Fm(1,nyears,-20,-0.2,phs_F); // // log  mortalidad por pesca por flota machos F LIMITADA EN 0.8187 !!!!!!
+ init_bounded_vector log_Fh(1,nyears,-20,-0.2,phs_F); // log  mortalidad por pesca por flota
 
 // capturabilidades
  init_vector log_qflo(1,nbloq_qflo,phs_qflo);
@@ -267,10 +254,10 @@ PARAMETER_SECTION
  matrix cv_index(1,4,1,nyears);
  matrix nm_flocru(1,4,1,nyears);
 
- matrix S_flom(1,nbloq_selflo,1,ntallas);
- matrix S_floh(1,nbloq_selflo,1,ntallas);
- matrix S_crum(1,nbloq_selcru,1,ntallas);
- matrix S_cruh(1,nbloq_selcru,1,ntallas);
+ matrix S_flom(1,nbloq_selflo,1,nedades);
+ matrix S_floh(1,nbloq_selflo,1,nedades);
+ matrix S_crum(1,nbloq_selcru,1,nedades);
+ matrix S_cruh(1,nbloq_selcru,1,nedades);
 
  matrix Sel_flom(1,nyears,1,nedades);
  matrix Sel_floh(1,nyears,1,nedades);
@@ -515,67 +502,48 @@ FUNCTION Eval_selectividad
 
 
 // FLOTA
+
  for (j=1;j<=nbloq_selflo;j++){
 
- S_flom(j)=exp(-0.5*square(vec_tallas-exp(log_L50flom(j)))/square(exp(log_sdL50flomL(j))));//machos
- S_floh(j)=exp(-0.5*square(vec_tallas-exp(log_L50floh(j)))/square(exp(log_sdL50flohL(j))));//hembras
+ S_flom(j)=1/(1+exp(-log(19)*(vec_ages-exp(log_L50flom(j)))/exp(log_sdL50flomL(j))));//machos // Porque no esta dividido en la diferencia entre A95-A50?
+ S_floh(j)=1/(1+exp(-log(19)*(vec_ages-exp(log_L50floh(j)))/exp(log_sdL50flohL(j))));//hembras
 
-
-    for (i=1;i<=ntallas;i++){
-
-      if(vec_tallas(i)>=exp(log_L50flom(j))){
-      S_flom(j,i)= exp(-0.5*square(vec_tallas(i)-exp(log_L50flom(j)))/square(exp(log_sdL50flomR(j))));
-      }
-
-      if(vec_tallas(i)>=exp(log_L50floh(j))){
-      S_floh(j,i)= exp(-0.5*square(vec_tallas(i)-exp(log_L50floh(j)))/square(exp(log_sdL50flohR(j))));
-      }
-
- }}
-
+ }
 
    for (i=1;i<=nyears;i++){
       for (j=1;j<=nbloq_selflo;j++){
               if (yrs(i)>=ybloq_selflo(j)){
-                Sel_flom(i)=Prob_talla_m*S_flom(j);//machos
-                Sel_floh(i)=Prob_talla_h*S_floh(j);} //hembras
+                Sel_flom(i)=S_flom(j);//machos
+                Sel_floh(i)=S_floh(j);} //hembras
        }
    }
+
+
+
 
  // CRUCEROS
 
  // por defecto los mismos que la flota
  //    Sel_crum=Sel_flom;
  //   Sel_cruh=Sel_floh;
-    Sel_crum=1.0;
-    Sel_cruh=1.0;
+    //Sel_crum=1.0;
+    //Sel_cruh=1.0;
 
 
  if(active(log_L50crum)){
 
  for (j=1;j<=nbloq_selcru;j++){
 
- S_crum(j)=exp(-0.5*square(vec_tallas-exp(log_L50crum(j)))/square(exp(log_sdL50crumL(j))));
- S_cruh(j)=exp(-0.5*square(vec_tallas-exp(log_L50cruh(j)))/square(exp(log_sdL50cruhL(j))));
+ S_crum(j)=1/(1+exp(-log(19)*(vec_ages-exp(log_L50crum(j)))/exp(log_sdL50crumL(j))));
+ S_cruh(j)=1/(1+exp(-log(19)*(vec_ages-exp(log_L50cruh(j)))/exp(log_sdL50cruhL(j))));
 
-
-    for (i=1;i<=ntallas;i++){
-
-      if(vec_tallas(i)>=exp(log_L50crum(j))){
-      S_crum(j,i)= exp(-0.5*square(vec_tallas(i)-exp(log_L50crum(j)))/square(exp(log_sdL50crumR(j))));
-      }
-
-      if(vec_tallas(i)>=exp(log_L50cruh(j))){
-      S_cruh(j,i)= exp(-0.5*square(vec_tallas(i)-exp(log_L50cruh(j)))/square(exp(log_sdL50cruhR(j))));
-      }
-
- }}
+ }
 
    for (i=1;i<=nyears;i++){
       for (j=1;j<=nbloq_selcru;j++){
               if (yrs(i)>=ybloq_selcru(j)){
-                Sel_crum(i)=Prob_talla_m*S_crum(j);
-                Sel_cruh(i)=Prob_talla_h*S_cruh(j);}
+                Sel_crum(i)=S_crum(j);
+                Sel_cruh(i)=S_cruh(j);}
        }
    }
 
@@ -844,7 +812,7 @@ FUNCTION Eval_funcion_objetivo
  likeval(10)=1./(2*square(cvar(2)))*norm2(log_dev_Nom);
  likeval(11)=1./(2*square(cvar(2)))*norm2(log_dev_Noh);}
  
- if(active(log_sdL50flomR)){
+ /*if(active(log_sdL50flomR)){
  likeval(12)=lambda*norm2(log_sdL50flomR-log_s2priorm);}
  
  if(active(log_sdL50flohR)){
@@ -855,6 +823,7 @@ FUNCTION Eval_funcion_objetivo
  
  if(active(log_sdL50cruhR)){
  likeval(15)=lambda*norm2(log_sdL50cruhR-log_s2priorch);}
+ */
 
  if (active(log_propmR)){
  likeval(16)=0.5/square(cvar(3))*square(log_propmR+0.69315);}
@@ -875,6 +844,10 @@ FUNCTION Eval_funcion_objetivo
 
  if(active(log_Fref)){
  penalty+=1000*norm2(ratio_pbr-tasa_bdpr);}
+
+// if (active(log_Fh)){
+// penalty+=1000*(square(log_Fh(8)-mean(log_Fh))+square(log_Fh(12)-mean(log_Fh))+square(log_Fh(13)-mean(log_Fh))); }
+
 
 
  f=opt_sim*sum(likeval)+penalty;
@@ -935,7 +908,7 @@ FUNCTION Eval_CTP
  CBA=YTP(2);// es para el año proyectado
  
  
- // Rutina para la estimación de RPR
+ // Rutina para la estimacion de RPR
 
  Nvp=Nv(nyears);// toma la ultima estimación
  
