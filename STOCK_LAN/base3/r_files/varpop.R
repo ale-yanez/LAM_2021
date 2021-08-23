@@ -1,3 +1,4 @@
+rm(list=ls())
 # Funciones y Directorios ####
 library(rstudioapi)
 library(ggplot2)
@@ -14,6 +15,8 @@ devtools::source_url("https://github.com/ale-yanez/RFunctions/blob/master/read.a
 
 out1 <- read.admb("../output/Lam")
 std1 <- read.table('../output/Lam.std', header = T, sep = '', na='NA', fill = T)
+
+#system('mkdir ../../figures/Ffree') #otra opción
 
 # Para graficar ... ####
  yrs <- out1$YRS
@@ -47,7 +50,6 @@ std1 <- read.table('../output/Lam.std', header = T, sep = '', na='NA', fill = T)
  stdF1         <- subset(std1,name=='log_Fh')$std
 # stdF2         <- subset(std2,name=='log_Fh')$std
  stdF1_b       <- subset(std1,name=='log_Fh')$std + subset(std1,name=='log_Fm')$std
-# stdF2_b       <- subset(std2,name=='log_Fh')$std + subset(std2,name=='log_Fm')$std
  
 # # Confidence Intervals
  rec1_lwr      <-Rec_est1-1.96*stdRec1
@@ -94,7 +96,7 @@ p9 <- ggplot(data = NULL, aes(x = yrs)) +
   #geom_line(aes(y = c(desvRec2,NA), colour = 'anterior', linetype = 'anterior')) +
   geom_ribbon(data=NULL, aes(ymin=desvrec1_lwr, ymax=desvrec1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(desvrec2_lwr,NA), ymax=c(desvrec2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(0,42)), colour = '', linetype = '')) +
+  geom_line(aes(y = c(rep(0,34)), colour = '', linetype = '')) +
   scale_color_manual(name = '',
                      values = c('royalblue3', 'black'),
                      limits = c('actual', ''),
@@ -106,7 +108,7 @@ p9 <- ggplot(data = NULL, aes(x = yrs)) +
 p9 <- p9 + theme_bw() + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'bottom') + ylab('Desvíos Reclutamientos') + xlab('Años') + 
-  scale_x_continuous(breaks=round(seq(1978, max(yrs), by = 6),1))
+  scale_x_continuous(breaks=round(seq(min(yrs), max(yrs), by = 6),1))
 
 p9
 
@@ -122,7 +124,7 @@ p10 <- ggplot(data = NULL, aes(x = yrs)) +
   #geom_line(aes(y = c(BT_est2,NA), colour = 'anterior', linetype = 'anterior')) +
   geom_ribbon(data=NULL, aes(ymin=BT1_lwr, ymax=BT1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(BT2_lwr,NA), ymax=c(BT2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(1,42)), colour = 'Brms', linetype = '')) +
+  geom_line(aes(y = c(rep(1,34)), colour = 'Brms', linetype = '')) +
   scale_color_manual(name = '',
                      values = c('royalblue3', 'chartreuse4'),
                      limits = c('actual', 'Brms'),
@@ -134,7 +136,7 @@ p10 <- ggplot(data = NULL, aes(x = yrs)) +
 p10 <- p10 + theme_bw() + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'none') + ylab('Biomasa Total (t)') + xlab('Años') + 
-  scale_x_continuous(breaks=round(seq(1978, max(yrs), by = 6),1))
+  scale_x_continuous(breaks=round(seq(min(yrs), max(yrs), by = 6),1))
 
 p10
 
@@ -146,8 +148,8 @@ p11 <- ggplot(data = NULL, aes(x = yrs)) +
   #geom_line(aes(y = c(BD_est2,NA), colour = 'anterior', linetype = 'anterior')) +
   geom_ribbon(data=NULL, aes(ymin=BD1_lwr, ymax=BD1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(BD2_lwr,NA), ymax=c(BD2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(Brms,42)), colour = 'Brms', linetype = 'Brms')) +
-  annotate("text", x=1980, y=3200, label="Brms") +
+  geom_line(aes(y = c(rep(Brms,34)), colour = 'Brms', linetype = 'Brms')) +
+  annotate("text", x=1993, y=3200, label="Brms") +
   scale_color_manual(name = '',
                      values = c('royalblue3', 'chartreuse4'),
                      limits = c('actual', 'Brms'),
@@ -159,7 +161,7 @@ p11 <- ggplot(data = NULL, aes(x = yrs)) +
 p11 <- p11 + theme_bw() + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'none') + ylab('Biomasa Desovante (t)') + xlab('Años') + 
-  scale_x_continuous(breaks=round(seq(1978, max(yrs), by = 6),1))
+  scale_x_continuous(breaks=round(seq(min(yrs), max(yrs), by = 6),1))
 
 p11
 
@@ -174,8 +176,8 @@ p12 <- ggplot(data = NULL, aes(x = yrs)) +
   #geom_line(aes(y = c(F_est2,NA), colour = 'anterior', linetype = 'anterior')) +
   geom_ribbon(data=NULL, aes(ymin=F1_lwr, ymax=F1_upr), fill = 'grey60', alpha = 0.4) + 
   #geom_ribbon(data=NULL, aes(ymin=c(F2_lwr,NA), ymax=c(F2_upr,NA)),fill = 'grey70', alpha = 0.4) + 
-  geom_line(aes(y = c(rep(M,42)), colour = 'M', linetype = 'M')) +
-  geom_line(aes(y = c(rep(Frms,42)), colour = 'Frms', linetype = 'Frms')) +
+  geom_line(aes(y = c(rep(M,34)), colour = 'M', linetype = 'M')) +
+  geom_line(aes(y = c(rep(Frms,34)), colour = 'Frms', linetype = 'Frms')) +
   annotate("text", x=2018, y=0.28, label="M") +
   annotate("text", x=2018, y=0.42, label="Frms") +
   
@@ -190,7 +192,7 @@ p12 <- ggplot(data = NULL, aes(x = yrs)) +
 p12 <- p12 + theme_bw() + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
   theme(legend.position = 'none') + ylab('Mortalidad por Pesca (1/años)') + xlab('Años') + 
-  scale_x_continuous(breaks=round(seq(1978, max(yrs), by = 6),1))
+  scale_x_continuous(breaks=round(seq(min(yrs), max(yrs), by = 6),1))
 
 p12
 #ggexport(p12, filename = "VarPop3_Fh.pdf", width=8, height=6.5, dpi=300)

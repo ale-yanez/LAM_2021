@@ -203,8 +203,8 @@ PARAMETER_SECTION
  init_bounded_dev_vector log_dev_Ro(1,nyears,-10,10,phs_devRt); //dev_vector para que la suma de los parámetros al ser estimados sea 0
  init_bounded_vector log_dev_Nom(1,nedades,-10,10,phs_devNo); // -10, 10 significa...
  init_bounded_vector log_dev_Noh(1,nedades,-10,10,phs_devNo);
- init_bounded_vector log_Fm(1,nyears,-20,10,phs_F); // // log  mortalidad por pesca por flota machos F LIMITADA EN 0.8187 !!!!!!
- init_bounded_vector log_Fh(1,nyears,-20,10,phs_F); // log  mortalidad por pesca por flota
+ init_bounded_vector log_Fm(1,nyears,-10,10,phs_F); // // log  mortalidad por pesca por flota machos F LIMITADA EN 0.8187 !!!!!!
+ init_bounded_vector log_Fh(1,nyears,-10,10,phs_F); // log  mortalidad por pesca por flota
 
 // capturabilidades
  init_vector log_qflo(1,nbloq_qflo,phs_qflo);
@@ -846,10 +846,10 @@ FUNCTION Eval_funcion_objetivo
  penalty+=1000*norm2(ratio_pbr-tasa_bdpr);}
 
  if (active(log_Fh)){
- penalty+=1000*(square(log_Fh(1)-mean(log_Fh))+square(log_Fh(2)-mean(log_Fh))+square(log_Fh(4)-mean(log_Fh))+square(log_Fh(5)-mean(log_Fh))+square(log_Fh(6)-mean(log_Fh))); }
+ penalty+=1000*(square(log_Fh(1)-mean(log_Fh))+square(log_Fh(2)-mean(log_Fh))+square(log_Fh(3)-mean(log_Fh))+square(log_Fh(4)-mean(log_Fh))+square(log_Fh(6)-mean(log_Fh))); }
 
-//if (active(log_Fh)){
-// penalty+=1000*(square(log_Fh(1)-mean(log_Fh))+square(log_Fh(2)-mean(log_Fh))+square(log_Fh(4)-mean(log_Fh))+square(log_Fh(5)-mean(log_Fh))+square(log_Fh(6)-mean(log_Fh))); }
+ if (active(log_Fm)){
+ penalty+=1000*(square(log_Fm(1)-mean(log_Fm))+square(log_Fm(3)-mean(log_Fm))+square(log_Fm(4)-mean(log_Fm))+square(log_Fm(5)-mean(log_Fm))+square(log_Fm(6)-mean(log_Fm))); }
 
 
  f=opt_sim*sum(likeval)+penalty;

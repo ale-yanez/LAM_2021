@@ -128,169 +128,46 @@ plot <- ggarrange(p1_2, p2, p3,
 #ggexport(plot, filename = "Fig1_2.jpeg", width=6.5, height=8, dpi=300)
 ggsave(plot, filename='../figures/Fig1.png', width=6.5, height=8, dpi=300)
 
+# Selectividad ####
 
-# Composición de tallas Flota ####
+df_Sel <- data.frame(c(1:11), out1$Sflom_age[1,], out1$Sfloh_age[1,], out1$Scrum_age[1,], out1$Scruh_age[1,])
+colnames(df_Sel) <- c('ages', 'S_flom','S_floh', 'S_crum', 'S_cruh')
 
-# Machos Flota
+#Plotting Flota
 
-df_mflobs <- data.frame(out1$pobs_mflo)
-names <- c(tallas)
-colnames(df_mflobs) <- names
-df_mflobs$yr <- as.factor(yrs)
-df_mflobs <- df_mflobs[-c(3:8, 29), ]
+p9 <- ggplot(df_Sel, aes(x = ages)) + 
+  geom_line(aes(y = S_flom, colour = 'Machos', linetype = 'Machos')) +
+  geom_line(aes(y = S_floh, colour = 'Hembras', linetype = 'Hembras')) +
+  scale_color_manual(name = '', values = c('black', 'black')) +     
+  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
 
-d_mflobs <- melt(df_mflobs)
-colnames(d_mflobs) <- c('yr', 'Tallas', 'value')
+p9 <- p9 + theme_bw() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
+  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
+  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Flota')
 
-#Adding fits
-df_mfloest <- data.frame(out1$ppred_mflo)
-names <- c(tallas)
-colnames(df_mfloest) <- names
-df_mfloest$yr <- as.factor(yrs)
-df_mfloest <- df_mfloest[-c(3:8, 29), ]
+p9
 
-dd_mfloest <- melt(df_mfloest)
-colnames(dd_mfloest) <- c('yr2', 'Tallas2', 'value2')
+p10 <- ggplot(df_Sel, aes(x = ages)) + 
+  geom_line(aes(y = S_crum, colour = 'Machos', linetype = 'Machos')) +
+  geom_line(aes(y = S_cruh, colour = 'Hembras', linetype = 'Hembras')) +
+  scale_color_manual(name = '', values = c('black', 'black')) + 
+  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
 
-#Gran data frame
-d_mflo <- data.frame(d_mflobs$yr, d_mflobs$Tallas, d_mflobs$value, dd_mfloest$value2)
-head(d_mflo)
-colnames(d_mflo) <- c('yrs', 'Tallas', 'pobs', 'ppred')
+p10 <- p10 + theme_bw() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
+  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
+  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Crucero')
 
-#Plotting
-p1 <- ggplot(data=d_mflo, aes(x=Tallas, y=pobs)) +
-  geom_bar(stat="identity", colour='grey') + 
-  geom_line(data=d_mflo, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
-  #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
-  xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
+p10
 
-p1 <- p1 + facet_wrap(~ yrs, dir = 'v', scales='free')  + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.16))
-p1
+psel <- ggarrange(p9, p10, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
+#ggexport(psel, filename = "Fig8.jpeg")
+#ggsave(psel, filename = "../figures/Fig8.png")
 
-#ggexport(p1, filename = "Fig2_TallasM_flo.jpeg")
-ggsave(p1, filename = "../figures/Fig2_TallasM_flo.png")
-
-
-# Hembras Flota
-
-df_hflobs <- data.frame(out1$pobs_hflo)
-names <- c(tallas)
-colnames(df_hflobs) <- names
-df_hflobs$yr <- as.factor(yrs)
-df_hflobs <- df_hflobs[-c(3:8, 29), ]
-
-d_hflobs <- melt(df_hflobs)
-colnames(d_hflobs) <- c('yr', 'Tallas', 'value')
-
-#Adding fits
-df_hfloest <- data.frame(out1$Ppred_hflo)
-names <- c(tallas)
-colnames(df_hfloest) <- names
-df_hfloest$yr <- as.factor(yrs)
-df_hfloest <- df_hfloest[-c(3:8, 29), ]
-
-dd_hfloest <- melt(df_hfloest)
-colnames(dd_hfloest) <- c('yr2', 'Tallas2', 'value2')
-
-d_hflo <- data.frame(d_hflobs$yr, d_hflobs$Tallas, d_hflobs$value, dd_hfloest$value2)
-colnames(d_hflo) <- c('yrs', 'Tallas', 'pobs', 'ppred')
-
-
-#Plotting
-p2 <- ggplot(data=d_hflo, aes(x=Tallas, y=pobs)) +
-  geom_bar(stat="identity", colour='grey') + 
-  geom_line(data=d_hflo, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
-  #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
-  xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
-
-
-p2 <- p2 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
-p2
-
-#ggexport(p2, filename = "Fig3_TallasH_flo.jpeg")
-ggsave(p2, filename = "../figures/Fig3_TallasH_flo.png")
-
-
-# Composición de tallas Crucero ####
-
-# Machos Crucero
-
-df_mcruobs <- data.frame(out1$pobs_mcru)
-names <- c(tallas)
-colnames(df_mcruobs) <- names
-df_mcruobs$yr <- as.factor(yrs)
-df_mcruobs <- df_mcruobs[-c(1:14, 16, 26), ]
-
-d_mcruobs <- melt(df_mcruobs)
-colnames(d_mcruobs) <- c('yr', 'Tallas', 'value')
-
-#Adding fits
-df_mcruest <- data.frame(out1$ppred_mcru)
-names <- c(tallas)
-colnames(df_mcruest) <- names
-df_mcruest$yr <- as.factor(yrs)
-df_mcruest <- df_mcruest[-c(1:14, 16, 26), ]
-
-dd_mcruest <- melt(df_mcruest)
-colnames(dd_mcruest) <- c('yr2', 'Tallas2', 'value2')
-
-d_mcru <- data.frame(d_mcruobs$yr, d_mcruobs$Tallas, d_mcruobs$value, dd_mcruest$value2)
-colnames(d_mcru) <- c('yrs', 'Tallas', 'pobs', 'ppred')
-
-#Plotting
-p3 <- ggplot(data=d_mcru, aes(x=Tallas, y=pobs)) +
-  geom_bar(stat="identity", colour='grey') + 
-  geom_line(data=d_mcru, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
-  #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
-  xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
-
-p3 <- p3 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.13))
-p3
-
-#ggexport(p3, filename = "Fig4_TallasM_cru.jpeg")
-ggsave(p3, filename = "../figures/Fig4_TallasM_cru.png")
-
-
-# Hembras Crucero
-
-df_hcruobs <- data.frame(out1$pobs_hcru)
-names <- c(tallas)
-colnames(df_hcruobs) <- names
-df_hcruobs$yr <- as.factor(yrs)
-df_hcruobs <- df_hcruobs[-c(1:14, 16, 26), ]
-
-d_hcruobs <- melt(df_hcruobs)
-colnames(d_hcruobs) <- c('yr', 'Tallas', 'value')
-
-#Adding fits
-df_hcruest <- data.frame(out1$ppred_hcru)
-names <- c(tallas)
-colnames(df_hcruest) <- names
-df_hcruest$yr <- as.factor(yrs)
-df_hcruest <- df_hcruest[-c(1:14, 16, 26), ]
-
-dd_hcruest <- melt(df_hcruest)
-colnames(dd_hcruest) <- c('yr2', 'Tallas2', 'value2')
-
-d_hcru <- data.frame(d_hcruobs$yr, d_hcruobs$Tallas, d_hcruobs$value, dd_hcruest$value2)
-colnames(d_hcru) <- c('yrs', 'Tallas', 'pobs', 'ppred')
-
-#Plotting
-p4 <- ggplot(data=d_hcru, aes(x=Tallas, y=pobs)) +
-  geom_bar(stat="identity", colour='grey') + 
-  geom_line(data=d_hcru, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
-  #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
-  xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
-  theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
-
-p4 <- p4 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
-p4
-
-#ggexport(p4, filename = "Fig5_TallasH_cru.jpeg")
-ggsave(p4, filename = "../figures/Fig5_TallasH_cru.png")
+psel2 <- ggarrange(p9, p10, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
+#ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
+ggsave(psel2, filename = "../figures/Fig8_2.png", width=7, height=8, dpi=300)
 
 
 # Tallas Medias Flota ####
@@ -304,7 +181,7 @@ p5 <-  ggplot(df_flo, aes(x=yrs)) +
   geom_line(aes(y= Lest_m, colour="Talla Media Est.")) +
   scale_colour_manual(name='', values=c('Talla Media Est.'='royalblue3', 'Talla Media Obs.'='black'), guide='legend') +
   guides(colour = guide_legend(override.aes = list(linetype=c(1,0), shape=c(NA, 21)))) +
-
+  
   xlab('Años') + scale_x_continuous(breaks=round(seq(min(yrs), 2020, by = 5),1)) +
   ylab('LC machos (mm)') + ylim(24, 40) + 
   #scale_y_continuous(breaks=round(seq(24, 40, by = 4),1)) +
@@ -333,7 +210,7 @@ plot2 <- ggarrange(p5, p6, ncol = 1, nrow = 2, align = "v", common.legend = TRUE
 #ggexport(plot1, filename = "Fig6_1.jpeg", width=9, height=6, dpi=300)
 #ggexport(plot2, filename = "Fig6_2.jpeg", width=6.5, height=8, dpi=300)
 
-ggsave(plot1, filename = "../figures/Fig6_1.png", width=9, height=6, dpi=300)
+#ggsave(plot1, filename = "../figures/Fig6_1.png", width=9, height=6, dpi=300)
 ggsave(plot2, filename = "../figures/Fig6_2.png", width=6.5, height=8, dpi=300)
 
 
@@ -378,47 +255,174 @@ plot4 <- ggarrange(p7, p8, ncol = 1, nrow = 2, align = "v", common.legend = TRUE
 # ggexport(plot3, filename = "Fig7_1.jpeg", width=9, height=6, dpi=300)
 # ggexport(plot4, filename = "Fig7_2.jpeg", width=6.5, height=8, dpi=300)
 
-ggsave(plot3, filename = "../figures/Fig7_1.png", width=9, height=6, dpi=300)
+#ggsave(plot3, filename = "../figures/Fig7_1.png", width=9, height=6, dpi=300)
 ggsave(plot4, filename = "../figures/Fig7_2.png", width=6.5, height=8, dpi=300)
 
 
-# Selectividad ####
 
-df_Sel <- data.frame(c(1:11), out1$Sflom_age[1,], out1$Sfloh_age[1,], out1$Scrum_age[1,], out1$Scruh_age[1,])
-colnames(df_Sel) <- c('ages', 'S_flom','S_floh', 'S_crum', 'S_cruh')
 
-#Plotting Flota
 
-p9 <- ggplot(df_Sel, aes(x = ages)) + 
-  geom_line(aes(y = S_flom, colour = 'Machos', linetype = 'Machos')) +
-  geom_line(aes(y = S_floh, colour = 'Hembras', linetype = 'Hembras')) +
-  scale_color_manual(name = '', values = c('black', 'black')) +     
-  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
+# Composición de tallas Flota ####
 
-p9 <- p9 + theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=10)) +
-  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
-  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Flota')
+# Machos Flota
 
-p9
+# df_mflobs <- data.frame(out1$pobs_mflo)
+# names <- c(tallas)
+# colnames(df_mflobs) <- names
+# df_mflobs$yr <- as.factor(yrs)
+# df_mflobs <- df_mflobs[-c(3:8, 29), ]
+# 
+# d_mflobs <- melt(df_mflobs)
+# colnames(d_mflobs) <- c('yr', 'Tallas', 'value')
+# 
+# #Adding fits
+# df_mfloest <- data.frame(out1$ppred_mflo)
+# names <- c(tallas)
+# colnames(df_mfloest) <- names
+# df_mfloest$yr <- as.factor(yrs)
+# df_mfloest <- df_mfloest[-c(3:8, 29), ]
+# 
+# dd_mfloest <- melt(df_mfloest)
+# colnames(dd_mfloest) <- c('yr2', 'Tallas2', 'value2')
+# 
+# #Gran data frame
+# d_mflo <- data.frame(d_mflobs$yr, d_mflobs$Tallas, d_mflobs$value, dd_mfloest$value2)
+# head(d_mflo)
+# colnames(d_mflo) <- c('yrs', 'Tallas', 'pobs', 'ppred')
+# 
+# #Plotting
+# p1 <- ggplot(data=d_mflo, aes(x=Tallas, y=pobs)) +
+#   geom_bar(stat="identity", colour='grey') + 
+#   geom_line(data=d_mflo, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
+#   #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
+#   xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+#   theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
+# 
+# p1 <- p1 + facet_wrap(~ yrs, dir = 'v', scales='free')  + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.16))
+# p1
+# 
+# #ggexport(p1, filename = "Fig2_TallasM_flo.jpeg")
+# ggsave(p1, filename = "../figures/Fig2_TallasM_flo.png")
+# 
+# 
+# # Hembras Flota
+# 
+# df_hflobs <- data.frame(out1$pobs_hflo)
+# names <- c(tallas)
+# colnames(df_hflobs) <- names
+# df_hflobs$yr <- as.factor(yrs)
+# df_hflobs <- df_hflobs[-c(3:8, 29), ]
+# 
+# d_hflobs <- melt(df_hflobs)
+# colnames(d_hflobs) <- c('yr', 'Tallas', 'value')
+# 
+# #Adding fits
+# df_hfloest <- data.frame(out1$Ppred_hflo)
+# names <- c(tallas)
+# colnames(df_hfloest) <- names
+# df_hfloest$yr <- as.factor(yrs)
+# df_hfloest <- df_hfloest[-c(3:8, 29), ]
+# 
+# dd_hfloest <- melt(df_hfloest)
+# colnames(dd_hfloest) <- c('yr2', 'Tallas2', 'value2')
+# 
+# d_hflo <- data.frame(d_hflobs$yr, d_hflobs$Tallas, d_hflobs$value, dd_hfloest$value2)
+# colnames(d_hflo) <- c('yrs', 'Tallas', 'pobs', 'ppred')
+# 
+# 
+# #Plotting
+# p2 <- ggplot(data=d_hflo, aes(x=Tallas, y=pobs)) +
+#   geom_bar(stat="identity", colour='grey') + 
+#   geom_line(data=d_hflo, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
+#   #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
+#   xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+#   theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
+# 
+# 
+# p2 <- p2 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
+# p2
+# 
+# #ggexport(p2, filename = "Fig3_TallasH_flo.jpeg")
+# ggsave(p2, filename = "../figures/Fig3_TallasH_flo.png")
+# 
+# 
+# # Composición de tallas Crucero ####
+# 
+# # Machos Crucero
+# 
+# df_mcruobs <- data.frame(out1$pobs_mcru)
+# names <- c(tallas)
+# colnames(df_mcruobs) <- names
+# df_mcruobs$yr <- as.factor(yrs)
+# df_mcruobs <- df_mcruobs[-c(1:14, 16, 26), ]
+# 
+# d_mcruobs <- melt(df_mcruobs)
+# colnames(d_mcruobs) <- c('yr', 'Tallas', 'value')
+# 
+# #Adding fits
+# df_mcruest <- data.frame(out1$ppred_mcru)
+# names <- c(tallas)
+# colnames(df_mcruest) <- names
+# df_mcruest$yr <- as.factor(yrs)
+# df_mcruest <- df_mcruest[-c(1:14, 16, 26), ]
+# 
+# dd_mcruest <- melt(df_mcruest)
+# colnames(dd_mcruest) <- c('yr2', 'Tallas2', 'value2')
+# 
+# d_mcru <- data.frame(d_mcruobs$yr, d_mcruobs$Tallas, d_mcruobs$value, dd_mcruest$value2)
+# colnames(d_mcru) <- c('yrs', 'Tallas', 'pobs', 'ppred')
+# 
+# #Plotting
+# p3 <- ggplot(data=d_mcru, aes(x=Tallas, y=pobs)) +
+#   geom_bar(stat="identity", colour='grey') + 
+#   geom_line(data=d_mcru, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
+#   #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
+#   xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+#   theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
+# 
+# p3 <- p3 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.13))
+# p3
+# 
+# #ggexport(p3, filename = "Fig4_TallasM_cru.jpeg")
+# ggsave(p3, filename = "../figures/Fig4_TallasM_cru.png")
+# 
+# 
+# # Hembras Crucero
+# 
+# df_hcruobs <- data.frame(out1$pobs_hcru)
+# names <- c(tallas)
+# colnames(df_hcruobs) <- names
+# df_hcruobs$yr <- as.factor(yrs)
+# df_hcruobs <- df_hcruobs[-c(1:14, 16, 26), ]
+# 
+# d_hcruobs <- melt(df_hcruobs)
+# colnames(d_hcruobs) <- c('yr', 'Tallas', 'value')
+# 
+# #Adding fits
+# df_hcruest <- data.frame(out1$ppred_hcru)
+# names <- c(tallas)
+# colnames(df_hcruest) <- names
+# df_hcruest$yr <- as.factor(yrs)
+# df_hcruest <- df_hcruest[-c(1:14, 16, 26), ]
+# 
+# dd_hcruest <- melt(df_hcruest)
+# colnames(dd_hcruest) <- c('yr2', 'Tallas2', 'value2')
+# 
+# d_hcru <- data.frame(d_hcruobs$yr, d_hcruobs$Tallas, d_hcruobs$value, dd_hcruest$value2)
+# colnames(d_hcru) <- c('yrs', 'Tallas', 'pobs', 'ppred')
+# 
+# #Plotting
+# p4 <- ggplot(data=d_hcru, aes(x=Tallas, y=pobs)) +
+#   geom_bar(stat="identity", colour='grey') + 
+#   geom_line(data=d_hcru, aes(x=as.numeric(Tallas), y=ppred, colour = 'red')) + 
+#   #scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) +
+#   xlab('Tallas') + ylab('Proporción') + theme_bw() + theme(legend.position ='none') + 
+#   theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.text=element_text(size=8))
+# 
+# p4 <- p4 + facet_wrap(~ yrs, dir = 'v', scales = 'free') + scale_x_discrete('Tallas', breaks = seq(10, 52, by= 6)) + scale_y_continuous(limits=c(0,0.22))
+# p4
+# 
+# #ggexport(p4, filename = "Fig5_TallasH_cru.jpeg")
+# ggsave(p4, filename = "../figures/Fig5_TallasH_cru.png")
 
-p10 <- ggplot(df_Sel, aes(x = ages)) + 
-  geom_line(aes(y = S_crum, colour = 'Machos', linetype = 'Machos')) +
-  geom_line(aes(y = S_cruh, colour = 'Hembras', linetype = 'Hembras')) +
-  scale_color_manual(name = '', values = c('black', 'black')) + 
-  scale_linetype_manual(name = '', values = c('solid', 'dotted'))
 
-p10 <- p10 + theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text=element_text(size=8)) +
-  theme(legend.title=element_blank()) + theme(legend.position = 'bottom') + theme(legend.text=element_text(size=12)) +
-  ylab('Proporción') + scale_x_continuous('Edad (años)', breaks = seq(1, 11, by= 1)) + ggtitle('Crucero')
-
-p10
-
-psel <- ggarrange(p9, p10, ncol = 2, nrow = 1, align = "v", common.legend = TRUE, legend = "bottom")
-#ggexport(psel, filename = "Fig8.jpeg")
-ggsave(psel, filename = "../../figures/base/Fig8.png")
-
-psel2 <- ggarrange(p9, p10, ncol = 1, nrow = 2, align = "v", common.legend = TRUE, legend = "bottom")
-#ggexport(psel2, filename = "Fig8_2.jpeg", width=7, height=8, dpi=300)
-ggsave(psel2, filename = "../figures/Fig8_2.png", width=7, height=8, dpi=300)
