@@ -58,7 +58,7 @@ En términos de la información presentada en la **Figura 1**, es posible notar 
 # dat.file_nor    = "lamnor2003.dat" #Cambiar despues por info actualizada y borrar esto
 # dat1_nor        <- lisread(paste(dir.2,dat.file_nor, sep='/'));
 
-dat1_nor        <- lisread("../STOCK_LAN/input/base/stock_LAN.dat");
+dat1_nor        <- lisread("../STOCK_LAN/base/input/stock_LAN.dat");
 names(dat1_nor) <- str_trim(names(dat1_nor), side="right")
 dat_nor         <- dat1_nor
 
@@ -66,7 +66,7 @@ dat_nor         <- dat1_nor
 # setwd(dir.3)
 # dat.file_sur    = "lamsur2003.dat" #Cambiar despues por info actualizada y borrar esto
 # dat1_sur        <- lisread(paste(dir.3,dat.file_sur, sep='/'));
-dat1_sur        <- lisread("../STOCK_LAS/input/stock_LAS.dat");
+dat1_sur        <- lisread("../STOCK_LAS/base/input/stock_LAS.dat");
 names(dat1_sur) <- str_trim(names(dat1_sur), side="right")
 dat_sur         <- dat1_sur
 ```
@@ -180,7 +180,7 @@ bp <- bp + font("x.text", size = 7) + scale_x_discrete(breaks=round(seq(min(land
   theme(legend.position = 'bottom') + xlab('Años') + ylab('Desembarque (t)')
 bp
 
-ggsave(bp, file='Figs/Fig1_Desem_Total.png', width=7.5, height=5, dpi=300)
+#ggsave(bp, file='Figs/Fig1_Desem_Total.png', width=7.5, height=5, dpi=300)
 
 # op<-par(no.readonly=TRUE)
 # ps.options(horizontal=F,bg="white",onefile=FALSE,paper="special")
